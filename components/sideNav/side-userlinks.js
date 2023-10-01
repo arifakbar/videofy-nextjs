@@ -1,13 +1,13 @@
 "use client";
 
-import { Check, Clock, History, PlayCircle } from "lucide-react";
+import { Clock, History, PlayCircle, ThumbsUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const iconMap = {
   ["History"]: History,
   ["Watch Later"]: Clock,
   ["Playlists"]: PlayCircle,
-  ["Subscriptions"]: Check,
+  ["Liked Videos"]: ThumbsUp,
 };
 
 export default function SideUserlinks({ name }) {
@@ -15,7 +15,7 @@ export default function SideUserlinks({ name }) {
   const router = useRouter();
 
   const onClick = () => {
-    router.push(`/${name}`);
+    router.push(`/user/${name}`);
   };
 
   return (

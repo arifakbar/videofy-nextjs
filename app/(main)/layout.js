@@ -1,3 +1,5 @@
+"use client";
+
 import SideNavbar from "@/components/sideNav/side-navbar";
 import TopNavbar from "@/components/topnav/top-navbar";
 
