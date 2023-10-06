@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"; //For form Validation
+import axios from "axios";
 
 import {
   Form,
@@ -22,6 +23,10 @@ import {
 import { useForm } from "react-hook-form";
 
 import { useModal } from "@/hooks/use-modal";
+import { ArrowRight } from "lucide-react";
+import { auth, googleAuthProvider } from "@/firebase/firebase";
+import { useEffect } from "react";
+import { UserStore } from "@/hooks/user-store";
 
 const formSchema = z.object({
   email: z
@@ -33,28 +38,59 @@ const formSchema = z.object({
 
 export default function LoginModal() {
   const { onOpen, isOpen, type, onClose } = useModal();
+  const { loggedInUser } = UserStore();
 
   const isModalOpen = isOpen && type === "login";
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "0126cs181030@oriental.ac.in",
+      password: "password",
     },
   });
 
+  useEffect(() => {
+    form.setValue("email", "0126cs181030@oriental.ac.in");
+    form.setValue("password", "password");
+  })
+
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = () => {
-    alert("Logged In");
-    handleClose();
+  const onSubmit = async (values) => {
+    try {
+      const res = await auth.signInWithEmailAndPassword(values.email, values.password);
+      const { user } = res;
+      const idTokenResult = await user.getIdTokenResult();
+      const dbUser = await axios.post('/api/currentUser', { email: user?.email });
+      loggedInUser(idTokenResult, dbUser);
+      alert("Logged In Successfully!");
+      handleClose();
+    } catch (err) {
+      console.log(err);
+      alert(err.message);
+    }
   };
 
   const handleClose = () => {
     form.reset();
     onClose();
   };
+
+  const handleGoogleLogin = async (e) => {
+    e.stopPropagation();
+    try {
+      const res = await auth.signInWithPopup(googleAuthProvider);
+      const { user } = res;
+      const idTokenResult = await user.getIdTokenResult();
+      const dbUser = await axios.post('/api/users', { user: user });
+      loggedInUser(idTokenResult, dbUser);
+      alert("Logged In Successfully!");
+      handleClose();
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
@@ -121,6 +157,11 @@ export default function LoginModal() {
                 Create one.
               </p>
             </DialogDescription>
+            <div onClick={e => handleGoogleLogin(e)} className="
+            flex rounded-md py-[8px] cursor-pointer items-center justify-center gap-1 w-[90%] mx-7 bg-red-500 dark:bg-red-500 text-white dark:text-white hover:bg-red-400 dark:hover:bg-red-400 transition">
+              <p>Continue with Google</p>
+              <ArrowRight className="w-4 h-4" />
+            </div>
             <DialogFooter className="bg-gray-100">
               <Button disabled={isLoading} variant="outline">
                 Submit

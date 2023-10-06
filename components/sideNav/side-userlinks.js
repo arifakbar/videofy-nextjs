@@ -1,12 +1,11 @@
 "use client";
 
-import { Clock, History, PlayCircle, ThumbsUp } from "lucide-react";
+import { Clock, History, ThumbsUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const iconMap = {
   ["History"]: History,
   ["Watch Later"]: Clock,
-  ["Playlists"]: PlayCircle,
   ["Liked Videos"]: ThumbsUp,
 };
 

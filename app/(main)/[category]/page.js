@@ -1,9 +1,9 @@
 "use client";
 
 import { Gamepad, Mic, Newspaper, Trophy } from "lucide-react";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 
-import CategoryBanner from "@/components/banners/category-banner";
+import Banner from "@/components/banners/banner";
 
 const iconMap = {
   ["Music"]: Mic,
@@ -12,13 +12,18 @@ const iconMap = {
   ["Sports"]: Trophy,
 };
 
+const avail = ["Music", "Gaming", "News", "Sports"];
+
 export default function Categories() {
   const params = useParams();
   const { category } = params;
+
+  if (!avail.includes(category)) return redirect('/');
+
   const Icon = iconMap[category];
   return (
     <div>
-      <CategoryBanner category={category} Icon={Icon} />
+      <Banner name={category} src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg" />
       Hi - {category}
     </div>
   );

@@ -1,3 +1,4 @@
+
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"; //For form Validation
 
@@ -22,6 +23,7 @@ import {
 import { useForm } from "react-hook-form";
 
 import { useModal } from "@/hooks/use-modal";
+import { auth } from "@/firebase/firebase";
 
 const formSchema = z
   .object({
@@ -29,13 +31,8 @@ const formSchema = z
       .string()
       .min(1, "The email is required.")
       .email({ message: "The email is invalid." }),
-    password: z.string().min(6),
-    confirmPassword: z.string().min(6),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Password's don't match.",
-    path: ["confirmPassword"],
-  });
+
 
 export default function SignupModal() {
   const { onOpen, isOpen, type, onClose } = useModal();
@@ -46,16 +43,29 @@ export default function SignupModal() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      password: "",
-      confirmPassword: "",
     },
   });
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = () => {
-    alert("Logged In");
-    handleClose();
+  const onSubmit = async (values) => {
+    console.log(process.env.NEXT_PUBLIC_APP_REGISTER_REDIRECT_URL)
+    const config = {
+      url: process.env.NEXT_PUBLIC_APP_REGISTER_REDIRECT_URL,
+      handleCodeInApp: true
+    }
+    try {
+      await auth.sendSignInLinkToEmail(values.email, config);
+      alert("Link sent");
+
+      if (typeof window !== undefined) {
+        window.localStorage.setItem("emailForRegistration", values.email);
+      }
+
+      handleClose();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleClose = () => {
@@ -90,48 +100,6 @@ export default function SignupModal() {
                         disabled={isLoading}
                         className="bg-zinc-300/50 dark:border dark:text-white border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
                         placeholder="Enter your Email Address"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500 text-xs" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="uppercase text-xs font-bold text-zonc-500 dark:text-secondary/70">
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        className="bg-zinc-300/50 dark:border dark:text-white border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                        disabled={isLoading}
-                        type="password"
-                        placeholder="Enter you password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500 text-xs" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="uppercase text-xs font-bold text-zonc-500 dark:text-secondary/70">
-                      Confirm Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        className="bg-zinc-300/50 dark:border dark:text-white border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                        disabled={isLoading}
-                        type="password"
-                        placeholder="Enter you password again"
                         {...field}
                       />
                     </FormControl>

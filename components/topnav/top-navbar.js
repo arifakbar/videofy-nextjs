@@ -2,13 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "../mode-toggle";
-import UserAvatar from "../user-avatar";
 import { MobileToggle } from "../mobile-toggle";
 import { Button } from "../ui/button";
 import { useModal } from "@/hooks/use-modal";
+import { UserStore } from "@/hooks/user-store";
+import TopUserlinks from "./top-userlinks";
 
 export default function TopNavbar() {
   const { onOpen } = useModal();
+  const { user, token } = UserStore();
+
+  // console.log("TB-", user);
 
   const router = useRouter();
 
@@ -49,14 +53,17 @@ export default function TopNavbar() {
       </div>
       <div className="flex gap-2">
         <ModeToggle />
-        <Button
-          onClick={() => onOpen("login")}
-          variant="outline"
-          className="w-[70px]"
-        >
-          Login
-        </Button>
-        {/* <UserAvatar src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg" /> */}
+        {user && token ?
+          <TopUserlinks name={user?.name} profilePic={user?.profilePic} />
+          :
+          <Button
+            onClick={() => onOpen("login")}
+            variant="outline"
+            className="w-[70px]"
+          >
+            Login
+          </Button>
+        }
       </div>
     </div>
   );

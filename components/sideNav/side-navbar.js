@@ -1,5 +1,7 @@
 "use client";
 
+import firebase from "firebase/compat/app";
+
 import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
@@ -9,11 +11,24 @@ import { useRouter } from "next/navigation";
 import { Flame, Home, Search } from "lucide-react";
 import SideUserlinks from "./side-userlinks";
 import SideSubscriptions from "./side-subscriptions";
+import { UserStore } from "@/hooks/user-store";
+import SideUserPlaylists from "./side-userplaylists";
 
 export default function SideNavbar() {
   const router = useRouter();
   const links = ["Music", "Gaming", "News", "Sports"];
-  const userLinks = ["History", "Watch Later", "Playlists", "Liked Videos"];
+  const userLinks = ["History", "Watch Later", "Liked Videos"];
+
+  const { user, token, logoutUser } = UserStore();
+
+  const handleLogout = async () => {
+    try {
+      await firebase.auth().signOut();
+      logoutUser();
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <div className="bg-gray-200 px-2 space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-white py-3">
@@ -53,18 +68,26 @@ export default function SideNavbar() {
           return <SideNavlinks key={l} name={l} />;
         })}
         <Separator className="h-[2px] bg-zinc-500 dark:bg-zinc-700 rounded-md w-full my-3" />
-        {userLinks?.map((l) => {
-          return <SideUserlinks key={l} name={l} />;
-        })}
-        {/* <p className="font-semibold text-center my-4 text-xs text-zinc-500 dark:text-zinc-400 ">
-          Login to access more functionalities.
-        </p> */}
-        <Separator className="h-[2px] bg-zinc-500 dark:bg-zinc-700 rounded-md w-full my-3" />
-        <SideSubscriptions />
+        {user && token ?
+          <>
+            {userLinks?.map((l) => {
+              return <SideUserlinks key={l} name={l} />;
+            })}
+            <SideUserPlaylists />
+            <Separator className="h-[2px] bg-zinc-500 dark:bg-zinc-700 rounded-md w-full my-3" />
+            <SideSubscriptions />
+          </>
+          :
+          <p className="font-semibold text-center my-4 text-xs text-zinc-500 dark:text-zinc-400 ">
+            Login to access more functionalities.
+          </p>
+        }
       </ScrollArea>
-      <Button variant="outline" className="w-full">
-        Sign Out
-      </Button>
+      {user && token &&
+        <Button onClick={handleLogout} variant="outline" className="w-full">
+          Sign Out - {user.name}
+        </Button>
+      }
     </div>
   );
 }
