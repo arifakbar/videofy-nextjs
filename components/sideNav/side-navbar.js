@@ -82,7 +82,7 @@ function SideNavbar(props) {
       </ScrollArea>
       {user && token && (
         <Button onClick={handleLogout} variant="outline" className="w-full">
-          Sign Out - {user?.email}
+          Sign Out
         </Button>
       )}
     </div>

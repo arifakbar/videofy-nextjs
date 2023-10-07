@@ -9,7 +9,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["img.freepik.com", "utfs.io", "uploadthing.com"],
+    domains: ["img.freepik.com", "utfs.io"],
   },
 };
 
