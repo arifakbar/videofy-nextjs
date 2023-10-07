@@ -9,7 +9,12 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["img.freepik.com", "utfs.io"],
+    domains: [
+      "img.freepik.com",
+      "utfs.io",
+      "gumlet.assettype.com",
+      "www.shutterstock.com",
+    ],
   },
 };
 
