@@ -1,6 +1,5 @@
 "use client";
 
-import { userRoutes } from "@/components/privateRoute";
 import { Separator } from "@/components/ui/separator";
 import { useParams, redirect } from "next/navigation";
 
@@ -10,8 +9,7 @@ function UserCategories() {
   const params = useParams();
   const { category } = params;
 
-
-  if (!avail.includes(decodeURI(category))) return redirect('/');
+  if (!avail.includes(decodeURI(category))) return redirect("/");
 
   return (
     <div className="flex flex-col gap-3 p-3">
@@ -22,4 +20,4 @@ function UserCategories() {
   );
 }
 
-export default userRoutes(UserCategories);
+export default UserCategories;

@@ -5,16 +5,15 @@ import { ModeToggle } from "../mode-toggle";
 import { MobileToggle } from "../mobile-toggle";
 import { Button } from "../ui/button";
 import { useModal } from "@/hooks/use-modal";
-import { UserStore } from "@/hooks/user-store";
 import TopUserlinks from "./top-userlinks";
 
 export default function TopNavbar() {
   const { onOpen } = useModal();
-  const { user, token } = UserStore();
-
-  // console.log("TB-", user);
 
   const router = useRouter();
+
+  const user = "ABC";
+  const token = "ABC";
 
   return (
     <div className="bg-gray-200 px-4 flex items-center justify-between h-full text-primary w-full dark:bg-[#1E1F22] bg-white">
@@ -53,9 +52,12 @@ export default function TopNavbar() {
       </div>
       <div className="flex gap-2">
         <ModeToggle />
-        {user && token ?
-          <TopUserlinks name={user?.name} profilePic={user?.profilePic} />
-          :
+        {user && token ? (
+          <TopUserlinks
+            name="User-name"
+            profilePic="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg"
+          />
+        ) : (
           <Button
             onClick={() => onOpen("login")}
             variant="outline"
@@ -63,7 +65,7 @@ export default function TopNavbar() {
           >
             Login
           </Button>
-        }
+        )}
       </div>
     </div>
   );

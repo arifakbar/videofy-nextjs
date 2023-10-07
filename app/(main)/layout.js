@@ -3,31 +3,9 @@
 import SideNavbar from "@/components/sideNav/side-navbar";
 import TopNavbar from "@/components/topnav/top-navbar";
 
-import { useEffect } from "react";
-import { auth } from "@/firebase/firebase";
-import { UserStore } from "@/hooks/user-store";
-
-import axios from "axios";
-
-export default function MainLayout({ children }) {
-
-  const { loggedInUser } = UserStore();
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        const idTokenResult = await user.getIdTokenResult();
-        const dbUser = await axios.post('/api/currentUser', { email: user.email });
-        loggedInUser(idTokenResult, dbUser);
-      }
-    });
-    return () => setTimeout(() => {
-      unsubscribe();
-    }, 3000);
-  }, [auth]);
-
+function MainLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="h-full">
         <div className="flex w-full h-[65px] z-30 flex-row fixed inset-x-0">
           <TopNavbar />
@@ -40,3 +18,5 @@ export default function MainLayout({ children }) {
     </html>
   );
 }
+
+export default MainLayout;

@@ -1,7 +1,5 @@
 "use client";
 
-import firebase from "firebase/compat/app";
-
 import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
@@ -11,24 +9,23 @@ import { useRouter } from "next/navigation";
 import { Flame, Home, Search } from "lucide-react";
 import SideUserlinks from "./side-userlinks";
 import SideSubscriptions from "./side-subscriptions";
-import { UserStore } from "@/hooks/user-store";
 import SideUserPlaylists from "./side-userplaylists";
 
-export default function SideNavbar() {
+function SideNavbar(props) {
   const router = useRouter();
   const links = ["Music", "Gaming", "News", "Sports"];
   const userLinks = ["History", "Watch Later", "Liked Videos"];
 
-  const { user, token, logoutUser } = UserStore();
-
   const handleLogout = async () => {
     try {
-      await firebase.auth().signOut();
-      logoutUser();
+      alert("Logout");
     } catch (err) {
       console.log(err);
     }
-  }
+  };
+
+  const user = "ABC";
+  const token = "ABC";
 
   return (
     <div className="bg-gray-200 px-2 space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-white py-3">
@@ -68,7 +65,7 @@ export default function SideNavbar() {
           return <SideNavlinks key={l} name={l} />;
         })}
         <Separator className="h-[2px] bg-zinc-500 dark:bg-zinc-700 rounded-md w-full my-3" />
-        {user && token ?
+        {user && token ? (
           <>
             {userLinks?.map((l) => {
               return <SideUserlinks key={l} name={l} />;
@@ -77,17 +74,19 @@ export default function SideNavbar() {
             <Separator className="h-[2px] bg-zinc-500 dark:bg-zinc-700 rounded-md w-full my-3" />
             <SideSubscriptions />
           </>
-          :
+        ) : (
           <p className="font-semibold text-center my-4 text-xs text-zinc-500 dark:text-zinc-400 ">
             Login to access more functionalities.
           </p>
-        }
+        )}
       </ScrollArea>
-      {user && token &&
+      {user && token && (
         <Button onClick={handleLogout} variant="outline" className="w-full">
-          Sign Out - {user.name}
+          Sign Out - {user?.email}
         </Button>
-      }
+      )}
     </div>
   );
 }
+
+export default SideNavbar;

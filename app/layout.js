@@ -11,7 +11,7 @@ export const metadata = {
   description: "A video sharing app",
 };
 
-export default function RootLayout({ children }) {
+function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} bg-[#E3E5E8] dark:bg-[#313338]`}>
@@ -28,3 +28,5 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+export default RootLayout;

@@ -1,139 +1,118 @@
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"; //For form Validation
-import axios from "axios";
 
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
 } from "../ui/dialog";
 import { useForm } from "react-hook-form";
 
 import { useModal } from "@/hooks/use-modal";
-import { ArrowRight } from "lucide-react";
-import { auth, googleAuthProvider } from "@/firebase/firebase";
 import { useEffect } from "react";
-import { UserStore } from "@/hooks/user-store";
+
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-    name: z
-        .string()
-        .min(3, "Name is required."),
-    profilePic: z.string().min(3, "Name is required."),
+  name: z.string().min(3, "Name is required."),
+  profilePic: z.string().min(3, "Profile pic is required."),
 });
 
 export default function UserUpdateModal() {
-    const { isOpen, type, onClose } = useModal();
-    const { user } = UserStore();
+  const { isOpen, type, onClose, data } = useModal();
 
-    const isModalOpen = isOpen && type === "userUpdate";
+  const isModalOpen = isOpen && type === "userUpdate";
+  const router = useRouter();
 
-    const form = useForm({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: user?.name,
-            profilePic: user?.profilePic,
-        },
-    });
+  const { user } = data;
 
-    useEffect(() => {
-        form.setValue("name", user?.name);
-        form.setValue("profilePic", user?.profilePic);
-    })
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      profilePic: "",
+    },
+  });
 
-    const isLoading = form.formState.isSubmitting;
+  useEffect(() => {
+    if (user) {
+      form.setValue("name", user?.name);
+      form.setValue("profilePic", user?.profilePic);
+    }
+  }, [form, data]);
 
-    const onSubmit = async (values) => {
-        try {
-            alert("Updated");
-            handleClose();
-        } catch (err) {
-            console.log(err);
-            alert(err.message);
-        }
-    };
+  const isLoading = form.formState.isSubmitting;
 
-    const handleClose = () => {
-        form.reset();
-        onClose();
-    };
+  const onSubmit = async (values) => {
+    try {
+      console.log(values);
+    } catch (err) {
+      console.log(err);
+      alert(err.message);
+    }
+  };
 
-    return (
-        <Dialog open={isModalOpen} onOpenChange={handleClose}>
-            <DialogContent className="bg-white dark:text-white text-black p-0 overflow-hidden">
-                <DialogHeader className="p-6">
-                    <DialogTitle className="text-2xl text-center font-bold">
-                        Update User
-                    </DialogTitle>
-                    <DialogDescription className="text-center text-zinc-500">
-                        Make your profile more like you.
-                    </DialogDescription>
-                </DialogHeader>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                        <div className="space-y-8 px-6">
-                            <FormField
-                                control={form.control}
-                                name="profilePic"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="uppercase text-xs font-bold text-zonc-500 dark:text-secondary/70">
-                                            Profile Pic
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                disabled={isLoading}
-                                                className="bg-zinc-300/50 dark:border dark:text-white border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                                                placeholder="Enter your Email Address"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage className="text-red-500 text-xs" />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="uppercase text-xs font-bold text-zonc-500 dark:text-secondary/70">
-                                            Display Name
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                disabled={isLoading}
-                                                className="bg-zinc-300/50 dark:border dark:text-white border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                                                placeholder="Enter your Email Address"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage className="text-red-500 text-xs" />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                        <DialogFooter className="bg-gray-100">
-                            <Button disabled={isLoading} variant="outline">
-                                Update
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
-            </DialogContent>
-        </Dialog>
-    );
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
+
+  return (
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
+      <DialogContent className="bg-white dark:text-white text-black p-0 overflow-hidden">
+        <DialogHeader className="p-6">
+          <DialogTitle className="text-2xl text-center font-bold">
+            Update User
+          </DialogTitle>
+          <DialogDescription className="text-center text-zinc-500">
+            Make your profile more like you.
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="space-y-8 px-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="uppercase text-xs font-bold text-zonc-500 dark:text-secondary/70">
+                      Display Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={isLoading}
+                        className="bg-zinc-300/50 dark:border dark:text-white border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                        placeholder="Enter your Email Address"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <DialogFooter className="bg-gray-100">
+              <Button disabled={isLoading} variant="outline">
+                Update
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
 }

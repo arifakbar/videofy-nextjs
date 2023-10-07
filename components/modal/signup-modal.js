@@ -1,4 +1,3 @@
-
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"; //For form Validation
 
@@ -23,16 +22,13 @@ import {
 import { useForm } from "react-hook-form";
 
 import { useModal } from "@/hooks/use-modal";
-import { auth } from "@/firebase/firebase";
 
-const formSchema = z
-  .object({
-    email: z
-      .string()
-      .min(1, "The email is required.")
-      .email({ message: "The email is invalid." }),
-  })
-
+const formSchema = z.object({
+  email: z
+    .string()
+    .min(1, "The email is required.")
+    .email({ message: "The email is invalid." }),
+});
 
 export default function SignupModal() {
   const { onOpen, isOpen, type, onClose } = useModal();
@@ -49,20 +45,8 @@ export default function SignupModal() {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values) => {
-    console.log(process.env.NEXT_PUBLIC_APP_REGISTER_REDIRECT_URL)
-    const config = {
-      url: process.env.NEXT_PUBLIC_APP_REGISTER_REDIRECT_URL,
-      handleCodeInApp: true
-    }
     try {
-      await auth.sendSignInLinkToEmail(values.email, config);
-      alert("Link sent");
-
-      if (typeof window !== undefined) {
-        window.localStorage.setItem("emailForRegistration", values.email);
-      }
-
-      handleClose();
+      console.log(values);
     } catch (err) {
       console.log(err);
     }
@@ -72,6 +56,8 @@ export default function SignupModal() {
     form.reset();
     onClose();
   };
+
+  
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
