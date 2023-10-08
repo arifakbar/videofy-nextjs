@@ -4,6 +4,7 @@ import UserAvatar from "@/components/user-avatar";
 import { PlayCircle, ThumbsDown, ThumbsUp } from "lucide-react";
 import ActionTooltip from "../ui/action-tooltip";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function VideoCard({ className, profile }) {
   const [isLiked, setIsLiked] = useState(false);
@@ -18,9 +19,22 @@ export default function VideoCard({ className, profile }) {
     setIsLiked(false);
   };
 
+  const router = useRouter();
+
+  const onClick = () => {
+    router.push(`/video/1`);
+  };
+
+  const onUserClick = () => {
+    router.push(`/user/users/1`);
+  };
+
   return (
     <div className={className ? className : "w-[350px] m-5"}>
-      <div className="h-[250px] relative overflow-hidden cursor-pointer">
+      <div
+        className="h-[250px] relative overflow-hidden cursor-pointer"
+        onClick={onClick}
+      >
         <div className="absolute flex w-full h-full cursor-pointer opacity-0 hover:opacity-100 duration-300 z-10 items-center justify-center bg-black bg-opacity-75">
           <ActionTooltip label="Play">
             <PlayCircle className="h-9 w-9 text-zinc-500 dark:text-zinc-400" />
@@ -34,14 +48,19 @@ export default function VideoCard({ className, profile }) {
       </div>
       <div className="flex gap-x-3 items-center mt-2">
         {!profile && (
-          <UserAvatar
-            className="cursor-pointer"
-            src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg"
-          />
+          <div onClick={onUserClick}>
+            <UserAvatar
+              className="cursor-pointer"
+              src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg"
+            />
+          </div>
         )}
         <div className="w-full flex items-center justify-between">
           <div className="flex flex-col items-start w-[75%] justify-center">
-            <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+            <p
+              className="text-sm font-semibold text-zinc-500 dark:text-zinc-400"
+              onClick={onClick}
+            >
               Video Title
             </p>
             {profile && (
@@ -50,7 +69,10 @@ export default function VideoCard({ className, profile }) {
               </small>
             )}
             {!profile && (
-              <small className="text-xs text-zinc-500 dark:text-zinc-400 cursor-pointer">
+              <small
+                className="text-xs text-zinc-500 dark:text-zinc-400 cursor-pointer"
+                onClick={onUserClick}
+              >
                 Uploader Name
               </small>
             )}
@@ -69,7 +91,7 @@ export default function VideoCard({ className, profile }) {
             </ActionTooltip>
           )}
           {profile && isLiked && (
-            <ActionTooltip label="Like">
+            <ActionTooltip label="Unlike">
               <ThumbsDown
                 className="w-5 h-5 cursor-pointer hover:text-red-500 transition"
                 onClick={handleUnlike}

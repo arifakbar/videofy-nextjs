@@ -3,10 +3,17 @@
 import { Carousel } from "flowbite-react";
 import { PlayCircle } from "lucide-react";
 import ActionTooltip from "../ui/action-tooltip";
+import { useRouter } from "next/navigation";
 
 // https://picsum.photos/200/300?random=3
 
 export default function VideoCarousel() {
+  const router = useRouter();
+
+  const onPlayClick = () => {
+    router.push(`/video/1`);
+  };
+
   return (
     <div className="h-[350px] mb-4">
       <Carousel
@@ -16,7 +23,10 @@ export default function VideoCarousel() {
         className="rounded-0"
       >
         <div className="flex w-full gap-x-4 items-center justify-center">
-          <div className="w-[49%] relative flex items-center justify-center">
+          <div
+            className="w-[49%] relative flex items-center justify-center"
+            onClick={onPlayClick}
+          >
             <div className="absolute flex flex-col gap-y-3 opacity-0 hover:opacity-100 h-full w-full cursor-pointer duration-300 z-10 items-center justify-center bg-black bg-opacity-75">
               <ActionTooltip label="Play">
                 <PlayCircle className="h-9 w-9 text-zinc-500 dark:text-zinc-400" />
@@ -31,7 +41,10 @@ export default function VideoCarousel() {
               className="w-full object-center"
             />
           </div>
-          <div className="w-[49%] relative flex items-center justify-center">
+          <div
+            className="w-[49%] relative flex items-center justify-center"
+            onClick={onPlayClick}
+          >
             <div className="absolute flex flex-col gap-y-3 opacity-0 hover:opacity-100  h-full w-full cursor-pointer duration-300 z-10 items-center justify-center bg-black bg-opacity-75">
               <ActionTooltip label="Play">
                 <PlayCircle className="h-9 w-9 text-zinc-500 dark:text-zinc-400" />
@@ -48,7 +61,10 @@ export default function VideoCarousel() {
           </div>
         </div>
         <div className="flex w-full gap-x-4 items-center justify-center">
-          <div className="w-[49%] relative flex items-center justify-center">
+          <div
+            className="w-[49%] relative flex items-center justify-center"
+            onClick={onPlayClick}
+          >
             <div className="absolute flex flex-col gap-y-3 opacity-0 hover:opacity-100  h-full w-full cursor-pointer duration-300 z-10 items-center justify-center bg-black bg-opacity-75">
               <ActionTooltip label="Play">
                 <PlayCircle className="h-9 w-9 text-zinc-500 dark:text-zinc-400" />
@@ -63,7 +79,10 @@ export default function VideoCarousel() {
               className="w-full object-center"
             />
           </div>
-          <div className="w-[49%] relative flex items-center justify-center">
+          <div
+            className="w-[49%] relative flex items-center justify-center"
+            onClick={onPlayClick}
+          >
             <div className="absolute flex flex-col gap-y-3 opacity-0 hover:opacity-100  h-full w-full cursor-pointer duration-300 z-10 items-center justify-center bg-black bg-opacity-75">
               <ActionTooltip label="Play">
                 <PlayCircle className="h-9 w-9 text-zinc-500 dark:text-zinc-400" />
@@ -80,7 +99,10 @@ export default function VideoCarousel() {
           </div>
         </div>
         <div className="flex w-full gap-x-4 items-center justify-center">
-          <div className="w-[49%] relative flex items-center justify-center">
+          <div
+            className="w-[49%] relative flex items-center justify-center"
+            onClick={onPlayClick}
+          >
             <div className="absolute flex flex-col gap-y-3 opacity-0 hover:opacity-100  h-full w-full cursor-pointer duration-300 z-10 items-center justify-center bg-black bg-opacity-75">
               <ActionTooltip label="Play">
                 <PlayCircle className="h-9 w-9 text-zinc-500 dark:text-zinc-400" />
@@ -95,7 +117,10 @@ export default function VideoCarousel() {
               className="w-full object-center"
             />
           </div>
-          <div className="w-[49%] relative flex items-center justify-center">
+          <div
+            className="w-[49%] relative flex items-center justify-center"
+            onClick={onPlayClick}
+          >
             <div className="absolute flex flex-col gap-y-3 opacity-0 hover:opacity-100  h-full w-full cursor-pointer duration-300 z-10 items-center justify-center bg-black bg-opacity-75">
               <ActionTooltip label="Play">
                 <PlayCircle className="h-9 w-9 text-zinc-500 dark:text-zinc-400" />
@@ -112,7 +137,10 @@ export default function VideoCarousel() {
           </div>
         </div>
         <div className="flex w-full gap-x-4 items-center justify-center">
-          <div className="w-[49%] relative flex items-center justify-center">
+          <div
+            className="w-[49%] relative flex items-center justify-center"
+            onClick={onPlayClick}
+          >
             <div className="absolute flex flex-col gap-y-3 opacity-0 hover:opacity-100  h-full w-full cursor-pointer duration-300 z-10 items-center justify-center bg-black bg-opacity-75">
               <ActionTooltip label="Play">
                 <PlayCircle className="h-9 w-9 text-zinc-500 dark:text-zinc-400" />
@@ -127,7 +155,10 @@ export default function VideoCarousel() {
               className="w-full object-center"
             />
           </div>
-          <div className="w-[49%] relative flex items-center justify-center">
+          <div
+            className="w-[49%] relative flex items-center justify-center"
+            onClick={onPlayClick}
+          >
             <div className="absolute flex flex-col gap-y-3 opacity-0 hover:opacity-100  h-full w-full cursor-pointer duration-300 z-10 items-center justify-center bg-black bg-opacity-75">
               <ActionTooltip label="Play">
                 <PlayCircle className="h-9 w-9 text-zinc-500 dark:text-zinc-400" />

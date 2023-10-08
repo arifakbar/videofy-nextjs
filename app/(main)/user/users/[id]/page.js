@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function UserSubscription() {
+export default function UsersProfile() {
   const params = useParams();
   const router = useRouter();
   const { id } = params;
