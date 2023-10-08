@@ -14,6 +14,7 @@ const nextConfig = {
       "utfs.io",
       "gumlet.assettype.com",
       "www.shutterstock.com",
+      "picsum.photos",
     ],
   },
 };

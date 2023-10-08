@@ -5,7 +5,7 @@ import { PlayCircle, ThumbsDown, ThumbsUp } from "lucide-react";
 import ActionTooltip from "../ui/action-tooltip";
 import { useState } from "react";
 
-export default function VideoCard({ className, subscribed }) {
+export default function VideoCard({ className, profile }) {
   const [isLiked, setIsLiked] = useState(false);
 
   const handleLike = () => {
@@ -33,7 +33,7 @@ export default function VideoCard({ className, subscribed }) {
         />
       </div>
       <div className="flex gap-x-3 items-center mt-2">
-        {!subscribed && (
+        {!profile && (
           <UserAvatar
             className="cursor-pointer"
             src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg"
@@ -44,23 +44,23 @@ export default function VideoCard({ className, subscribed }) {
             <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
               Video Title
             </p>
-            {subscribed && (
+            {profile && (
               <small className="text-xs text-zinc-500 dark:text-zinc-400">
                 20 views - 10 likes
               </small>
             )}
-            {!subscribed && (
+            {!profile && (
               <small className="text-xs text-zinc-500 dark:text-zinc-400 cursor-pointer">
                 Uploader Name
               </small>
             )}
           </div>
-          {!subscribed && (
+          {!profile && (
             <small className="text-xs text-zinc-500 dark:text-zinc-400">
               20 views
             </small>
           )}
-          {subscribed && !isLiked && (
+          {profile && !isLiked && (
             <ActionTooltip label="Like">
               <ThumbsUp
                 className="w-5 h-5 cursor-pointer hover:text-blue-500 transition"
@@ -68,7 +68,7 @@ export default function VideoCard({ className, subscribed }) {
               />
             </ActionTooltip>
           )}
-          {subscribed && isLiked && (
+          {profile && isLiked && (
             <ActionTooltip label="Like">
               <ThumbsDown
                 className="w-5 h-5 cursor-pointer hover:text-red-500 transition"

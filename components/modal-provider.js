@@ -5,6 +5,7 @@ import SignupModal from "./modal/signup-modal";
 import UserUpdateModal from "./modal/user-update";
 import EditUserVideoModal from "./modal/edit-user-video-modal";
 import DeleteUserVideoModal from "./modal/delete-user-video-modal";
+import SearchModal from "./modal/search-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -20,6 +21,7 @@ export const ModalProvider = () => {
       <UserUpdateModal />
       <EditUserVideoModal />
       <DeleteUserVideoModal />
+      <SearchModal />
     </>
   );
 };
