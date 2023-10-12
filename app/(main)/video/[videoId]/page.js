@@ -6,6 +6,10 @@ import { useParams, useRouter } from "next/navigation";
 import UserAvatar from "@/components/user-avatar";
 import { useState } from "react";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import Comments from "@/components/comments/page";
+import VideoCard from "@/components/card/video-card";
 
 export default function Video() {
   const params = useParams();
@@ -28,21 +32,27 @@ export default function Video() {
         <div className="flex flex-col gap-y-2 w-full md:w-[70%]">
           <div className="w-full h-[60vh] bg-green-200">Video Player</div>
           <div className="flex justify-between">
-            <div className="flex flex-col gap-y-2 items-start w-[78%]">
+            <div className="flex flex-col gap-y-2 items-start w-full">
               <h3 className="text-xl font-semibold text-black dark:text-white">
                 Video Title
               </h3>
-              <div className="flex gap-x-2 items-center">
-                <div onClick={handleUserClick}>
-                  <UserAvatar src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg" />
+              <div className="w-full flex items-center justify-between">
+                <div className="flex gap-x-2 items-center">
+                  <div onClick={handleUserClick} className="cursor-pointer">
+                    <UserAvatar src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg" />
+                  </div>
+                  <div>
+                    <p onClick={handleUserClick} className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 cursor-pointer">
+                      User name
+                    </p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                      20 Subscribers
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-                    User name
-                  </p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                    20 Subscribers
-                  </p>
+                <div className="h-full flex justify-center gap-y-2">
+                  <Button variant="outline">Add to Watch Later</Button>
+                  <Button variant="outline">Add to Playlist</Button>
                 </div>
               </div>
               <div className="">
@@ -57,30 +67,38 @@ export default function Video() {
                 </p>
               </div>
             </div>
-            <div className="h-full flex flex-col justify-center gap-y-2">
-              <Button variant="outline">Add to Watch Later</Button>
-              <Button variant="outline">Add to Playlist</Button>
-            </div>
           </div>
         </div>
-        <div className="h-[60vh] md:w-[28%] flex flex-col justify-between">
+        <div className="h-[40vh] my-2 md:my-0 md:h-[60vh] md:w-[29%] flex flex-col gap-y-4 md:gap-y-0 md:justify-between">
           <div className="h-[10%] flex justify-between items-center ">
             <div className="flex gap-x-4">
               <div className="flex gap-x-2 items-center">
-                <ThumbsUp className="h-5 w-5 text-zinc-500 dark:text-zinc-400" />{" "}
+                <ThumbsUp className="h-5 w-5 text-zinc-500 dark:text-zinc-400 cursor-pointer" />{" "}
                 <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
                   20
                 </p>
               </div>
-              <ThumbsDown className="h-5 w-5 text-zinc-500 dark:text-zinc-400" />
+              <ThumbsDown className="h-5 w-5 text-zinc-500 dark:text-zinc-400 cursor-pointer" />
             </div>
             <Button variant="outline">Subscribe</Button>
           </div>
-          <div className="h-[90%] bg-yellow-200">Comments</div>
+          <Comments />
         </div>
       </div>
       <Separator className="bg-zinc-500 dark:bg-zinc-400" />
-      <div>Lower</div>
+      <div className=" mt-4 w-full flex justify-center flex-wrap">
+        <VideoCard className="w-[300px] m-3" />
+        <VideoCard className="w-[300px] m-3" />
+        <VideoCard className="w-[300px] m-3" />
+        <VideoCard className="w-[300px] m-3" />
+        <VideoCard className="w-[300px] m-3" />
+        <VideoCard className="w-[300px] m-3" />
+        <VideoCard className="w-[300px] m-3" />
+        <VideoCard className="w-[300px] m-3" />
+        <VideoCard className="w-[300px] m-3" />
+        <VideoCard className="w-[300px] m-3" />
+        <VideoCard className="w-[300px] m-3" />
+      </div>
     </div>
   );
 }

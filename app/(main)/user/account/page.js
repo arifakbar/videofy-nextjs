@@ -15,7 +15,7 @@ function UserAccount() {
     <SpinLoading />
   ) : (
     <div className="flex flex-col h-[calc(100vh-70px)] items-center justify-center">
-      <div className="flex flex-col items-center md:flex-row md:gap-x-4 gap-y-4 border-2 border-zinc-500 dark:border-x-zinc-400 py-4 px-8 ">
+      <div className="w-[80%] flex flex-col items-center md:flex-row md:gap-x-4 gap-y-4 border-2 border-zinc-500 dark:border-x-zinc-400 py-4 px-8 ">
         <Avatar className="h-[250px] w-[250px]">
           <AvatarImage src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg" />
         </Avatar>
