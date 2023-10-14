@@ -31,6 +31,7 @@ export default function UserPlaylistsModal() {
   const router = useRouter();
 
   const onClick = (id) => {
+    onClose();
     router.push(`/user/playlist/${id}`);
   };
 
