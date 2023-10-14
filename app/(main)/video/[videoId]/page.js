@@ -6,14 +6,17 @@ import { useParams, useRouter } from "next/navigation";
 import UserAvatar from "@/components/user-avatar";
 import { useState } from "react";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import Comments from "@/components/comments/page";
 import VideoCard from "@/components/card/video-card";
+import WatchLater from "@/components/watch-later/page";
+import { useModal } from "@/hooks/use-modal";
 
 export default function Video() {
   const params = useParams();
   const { videoId } = params;
+
+  const { onOpen } = useModal();
 
   const [showMore, setShowMore] = useState(false);
 
@@ -36,13 +39,16 @@ export default function Video() {
               <h3 className="text-xl font-semibold text-black dark:text-white">
                 Video Title
               </h3>
-              <div className="w-full flex items-center justify-between">
+              <div className="w-full flex gap-y-4 md:items-center justify-between">
                 <div className="flex gap-x-2 items-center">
                   <div onClick={handleUserClick} className="cursor-pointer">
                     <UserAvatar src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg" />
                   </div>
                   <div>
-                    <p onClick={handleUserClick} className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 cursor-pointer">
+                    <p
+                      onClick={handleUserClick}
+                      className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 cursor-pointer"
+                    >
                       User name
                     </p>
                     <p className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -50,9 +56,14 @@ export default function Video() {
                     </p>
                   </div>
                 </div>
-                <div className="h-full flex justify-center gap-y-2">
-                  <Button variant="outline">Add to Watch Later</Button>
-                  <Button variant="outline">Add to Playlist</Button>
+                <div className="h-full flex justify-center md:flex-row flex-col gap-y-2 md:gap-x-2">
+                  <WatchLater />
+                  <Button
+                    variant="outline"
+                    onClick={() => onOpen("playlists", { toAdd: true })}
+                  >
+                    Add to Playlist
+                  </Button>
                 </div>
               </div>
               <div className="">
