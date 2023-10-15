@@ -1,9 +1,18 @@
+"use client";
+
+import { useSession, signIn, signOut } from "next-auth/react";
+
 import VideoCard from "@/components/card/video-card";
 import VideoCarousel from "@/components/carousel/carousel";
 import MobileCarousel from "@/components/carousel/mobileCarousel";
 import { Separator } from "@/components/ui/separator";
 
 export default function Home() {
+  const { data: session } = useSession();
+  console.log("SESSION: ", session && session.user);
+
+  //session.user - email,image,name
+
   return (
     <div className="py-4 px-1">
       <div className="hidden md:block">
