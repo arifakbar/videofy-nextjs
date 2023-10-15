@@ -11,7 +11,7 @@ import UserAvatar from "../user-avatar";
 
 export default function TopUserlinks({ name, profilePic }) {
   const router = useRouter();
-
+  console.log(profilePic);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

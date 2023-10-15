@@ -15,6 +15,7 @@ const nextConfig = {
       "gumlet.assettype.com",
       "www.shutterstock.com",
       "picsum.photos",
+      "lh3.googleusercontent.com",
     ],
   },
 };

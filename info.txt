@@ -50,9 +50,3 @@ export default ({ email }) => (
   <button onClick={() => signIn("email", { email })}>Sign in with Email</button>
 )
 
-------------------------------------------------------------------------------------------------------------------------
-signOut
-
-
-import { signOut } from "next-auth/react"
-export default () => <button onClick={() => signOut()}>Sign out</button>

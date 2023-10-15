@@ -6,14 +6,14 @@ import { MobileToggle } from "../mobile-toggle";
 import { Button } from "../ui/button";
 import { useModal } from "@/hooks/use-modal";
 import TopUserlinks from "./top-userlinks";
+import { useSession } from "next-auth/react";
 
 export default function TopNavbar() {
   const { onOpen } = useModal();
 
   const router = useRouter();
 
-  const user = "ABC";
-  const token = "ABC";
+  const { data: session } = useSession();
 
   return (
     <div className="bg-gray-200 px-4 flex items-center justify-between h-full text-primary w-full dark:bg-[#1E1F22] bg-white">
@@ -55,10 +55,10 @@ export default function TopNavbar() {
       </div>
       <div className="flex gap-2">
         <ModeToggle />
-        {user && token ? (
+        {session && session.user ? (
           <TopUserlinks
-            name="User-name"
-            profilePic="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg"
+            name={session.user?.name}
+            profilePic={session?.user?.image}
           />
         ) : (
           <Button

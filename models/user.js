@@ -54,6 +54,12 @@ const userSchema = new Schema(
         ref: "Video",
       },
     ],
+    unlikedVideos: [
+      {
+        type: ObjectId,
+        ref: "Video",
+      },
+    ],
     userPlaylists: [
       {
         type: ObjectId,

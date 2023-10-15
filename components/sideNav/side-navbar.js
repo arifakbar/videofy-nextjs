@@ -10,6 +10,7 @@ import { Flame, Home, Search } from "lucide-react";
 import SideUserlinks from "./side-userlinks";
 import SideSubscriptions from "./side-subscriptions";
 import SideUserPlaylists from "./side-userplaylists";
+import { signOut, useSession } from "next-auth/react";
 
 function SideNavbar(props) {
   const router = useRouter();
@@ -18,14 +19,13 @@ function SideNavbar(props) {
 
   const handleLogout = async () => {
     try {
-      alert("Logout");
+      await signOut();
     } catch (err) {
       console.log(err);
     }
   };
 
-  const user = "ABC";
-  const token = "ABC";
+  const { data: session } = useSession();
 
   return (
     <div className="bg-gray-200 px-2 space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-white py-3">
@@ -65,7 +65,7 @@ function SideNavbar(props) {
           return <SideNavlinks key={l} name={l} />;
         })}
         <Separator className="h-[2px] bg-zinc-500 dark:bg-zinc-700 rounded-md w-full my-3" />
-        {user && token ? (
+        {session && session.user ? (
           <>
             {userLinks?.map((l) => {
               return <SideUserlinks key={l} name={l} />;
@@ -80,7 +80,7 @@ function SideNavbar(props) {
           </p>
         )}
       </ScrollArea>
-      {user && token && (
+      {session && session.user && (
         <Button onClick={handleLogout} variant="outline" className="w-full">
           Sign Out
         </Button>

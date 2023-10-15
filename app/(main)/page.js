@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 import VideoCard from "@/components/card/video-card";
 import VideoCarousel from "@/components/carousel/carousel";
@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Home() {
   const { data: session } = useSession();
-  console.log("SESSION: ", session && session.user);
+  console.log("SESSION_MAIN: ", session && session.user);
 
   //session.user - email,image,name
 
