@@ -27,10 +27,11 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import FileUpload from "../file-upload";
 
 const formSchema = z.object({
   name: z.string().min(3, "Name is required."),
-  // profilePic: z.string().min(3, "Profile pic is required."),
+  profilePic: z.string().min(3, "Profile pic is required."),
 });
 
 export default function UserUpdateModal() {
@@ -39,21 +40,20 @@ export default function UserUpdateModal() {
   const isModalOpen = isOpen && type === "userUpdate";
   const router = useRouter();
 
-  const {data:session, update} = useSession();
+  const { data: session, update } = useSession();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      // profilePic: "",
+      profilePic: "",
     },
   });
-
 
   useEffect(() => {
     if (session && session.user) {
       form.setValue("name", session.user?.name);
-      // form.setValue("profilePic", user?.profilePic);
+      form.setValue("profilePic", session.user?.image);
     }
   }, [form, session]);
 
@@ -61,10 +61,12 @@ export default function UserUpdateModal() {
 
   const onSubmit = async (values) => {
     try {
-      await axios.patch('/api/user/currentUser',values);
+      await axios.patch("/api/user/currentUser", values);
+      console.log(values);
       await update();
-      handleClose();
-      router.push('/');
+      form.reset();   
+      router.refresh();
+      window.location.reload();
     } catch (err) {
       console.log(err);
       alert(err.message);
@@ -89,6 +91,23 @@ export default function UserUpdateModal() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-8 px-6">
+              <div className="flex items-center justify-center text-center">
+                <FormField
+                  control={form.control}
+                  name="profilePic"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FileUpload
+                          endpoint="profilePic"
+                          onChange={field.onChange}
+                          value={field.value}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
                 name="name"

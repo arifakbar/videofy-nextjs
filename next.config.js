@@ -16,6 +16,7 @@ const nextConfig = {
       "www.shutterstock.com",
       "picsum.photos",
       "lh3.googleusercontent.com",
+      "avatars.githubusercontent.com",
     ],
   },
 };

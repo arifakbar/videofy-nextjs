@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+
+import { withUt } from "uploadthing/tw";
+module.exports = withUt({
   darkMode: ["class"],
   content: [
     "./pages/**/*.{js,jsx}",
@@ -7,6 +9,7 @@ module.exports = {
     "./app/**/*.{js,jsx}",
     "./src/**/*.{js,jsx}",
     "./node_modules/flowbite-react/**/*.js",
+    "./src/**/*.{ts,tsx,mdx}",
   ],
   theme: {
     container: {
@@ -34,4 +37,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate"), require("flowbite/plugin")],
-};
+});

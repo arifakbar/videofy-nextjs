@@ -8,7 +8,6 @@ import { useModal } from "@/hooks/use-modal";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import axios from "axios";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 function UserAccount() {
   const [loading, setLoading] = useState(false);
@@ -16,19 +15,19 @@ function UserAccount() {
 
   const [currentUser, setCurrentUser] = useState({});
 
-  useEffect(()=>{
+  useEffect(() => {
     loadCurrentUser();
-  },[]);
+  }, []);
 
-  const loadCurrentUser = async () =>{
-    try{
-      const res = await axios.get('/api/user/currentUser');
+  const loadCurrentUser = async () => {
+    try {
+      const res = await axios.get("/api/user/currentUser");
       console.log(res.data.data);
       setCurrentUser(res.data.data);
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   return loading ? (
     <SpinLoading />
