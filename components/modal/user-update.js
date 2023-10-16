@@ -25,40 +25,48 @@ import { useModal } from "@/hooks/use-modal";
 import { useEffect } from "react";
 
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import axios from "axios";
 
 const formSchema = z.object({
   name: z.string().min(3, "Name is required."),
-  profilePic: z.string().min(3, "Profile pic is required."),
+  // profilePic: z.string().min(3, "Profile pic is required."),
 });
 
 export default function UserUpdateModal() {
-  const { isOpen, type, onClose, data } = useModal();
+  const { isOpen, type, onClose } = useModal();
 
   const isModalOpen = isOpen && type === "userUpdate";
   const router = useRouter();
 
-  const { user } = data;
+  const {data:session, update} = useSession();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      profilePic: "",
+      // profilePic: "",
     },
   });
 
+  console.log(session?.user);
+
   useEffect(() => {
-    if (user) {
-      form.setValue("name", user?.name);
-      form.setValue("profilePic", user?.profilePic);
+    if (session && session.user) {
+      form.setValue("name", session.user?.name);
+      // form.setValue("profilePic", user?.profilePic);
     }
-  }, [form, data]);
+  }, [form, session]);
 
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values) => {
     try {
-      console.log(values);
+      const res = await axios.patch('/api/user/currentUser',values);
+      // await update({name:res.data.data.name});
+      // session.user.name = res.data.data.name;
+      handleClose();
+      router.refresh('/');
     } catch (err) {
       console.log(err);
       alert(err.message);
@@ -66,7 +74,6 @@ export default function UserUpdateModal() {
   };
 
   const handleClose = () => {
-    form.reset();
     onClose();
   };
 
@@ -78,7 +85,7 @@ export default function UserUpdateModal() {
             Update User
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            Make your profile more like you.
+            Give you profile a personality.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

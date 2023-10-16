@@ -17,7 +17,7 @@ export const AuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session }) {
+    async session({ session, trigger, newSession }) {
       // console.log("SESSION_HERE: ", session);
       const sessionUser = await User.findOne({ email: session.user.email });
       session.user.id = sessionUser._id;
@@ -32,7 +32,7 @@ export const AuthOptions = {
           await User.create({
             email: profile.email,
             name: profile.name,
-            profilePic: profile.image,
+            profilePic: profile.avatar_url ? profile.avatar_url : profile.picture,
           });
         }
         return true;
