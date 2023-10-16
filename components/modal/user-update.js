@@ -49,7 +49,6 @@ export default function UserUpdateModal() {
     },
   });
 
-  console.log(session?.user);
 
   useEffect(() => {
     if (session && session.user) {
@@ -62,11 +61,10 @@ export default function UserUpdateModal() {
 
   const onSubmit = async (values) => {
     try {
-      const res = await axios.patch('/api/user/currentUser',values);
-      // await update({name:res.data.data.name});
-      // session.user.name = res.data.data.name;
+      await axios.patch('/api/user/currentUser',values);
+      await update();
       handleClose();
-      router.refresh('/');
+      router.push('/');
     } catch (err) {
       console.log(err);
       alert(err.message);

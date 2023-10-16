@@ -17,10 +17,12 @@ export const AuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, trigger, newSession }) {
+    async session({ session , trigger }) {
       // console.log("SESSION_HERE: ", session);
       const sessionUser = await User.findOne({ email: session.user.email });
-      session.user.id = sessionUser._id;
+      session.user.id = sessionUser?._id;
+      session.user.name = sessionUser?.name;
+      session.user.image = sessionUser?.profilePic;
       return session;
     },
     async signIn({ profile }) {
