@@ -21,11 +21,14 @@ function UserAccount() {
 
   const loadCurrentUser = async () => {
     try {
+      setLoading(true);
       const res = await axios.get("/api/user/currentUser");
       console.log(res.data.data);
       setCurrentUser(res.data.data);
+      setLoading(false);
     } catch (err) {
       console.log(err);
+      setLoading(false);
     }
   };
 
@@ -33,7 +36,7 @@ function UserAccount() {
     <SpinLoading />
   ) : (
     <div className="flex flex-col h-[calc(100vh-70px)] items-center justify-center">
-      <div className="w-[80%] flex flex-col items-center md:flex-row md:gap-x-4 gap-y-4 border-2 border-zinc-500 dark:border-x-zinc-400 py-4 px-8 ">
+      <div className="md:w-[60%] flex flex-col items-center md:flex-row md:gap-x-4 gap-y-4 border-2 border-zinc-500 dark:border-x-zinc-400 py-4 px-8 ">
         <Avatar className="h-[250px] w-[250px]">
           <AvatarImage src={currentUser?.profilePic} />
         </Avatar>
