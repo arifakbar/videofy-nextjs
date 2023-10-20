@@ -8,6 +8,7 @@ import SearchModal from "./modal/search-modal";
 import UserPlaylistsModal from "./modal/user-playlists-modal";
 import NewPlaylistModal from "./modal/new-playlist-modal";
 import NewVideoModal from "./modal/new-video-modal";
+import CompleteVideoModal from "./modal/complete-video-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -26,6 +27,7 @@ export const ModalProvider = () => {
       <UserPlaylistsModal />
       <NewPlaylistModal />
       <NewVideoModal />
+      <CompleteVideoModal />
     </>
   );
 };

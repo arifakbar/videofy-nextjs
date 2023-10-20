@@ -36,7 +36,7 @@ function UserAccount() {
     <SpinLoading />
   ) : (
     <div className="flex flex-col h-[calc(100vh-70px)] items-center justify-center">
-      <div className="md:w-[60%] flex flex-col items-center md:flex-row md:gap-x-4 gap-y-4 border-2 border-zinc-500 dark:border-x-zinc-400 py-4 px-8 ">
+      <div className="p-3 w-auto flex flex-col items-center md:flex-row md:gap-x-4 gap-y-4 border-2 border-zinc-500 dark:border-x-zinc-400 py-4 px-8 ">
         <Avatar className="h-[250px] w-[250px]">
           <AvatarImage src={currentUser?.profilePic} />
         </Avatar>

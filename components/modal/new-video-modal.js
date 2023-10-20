@@ -33,7 +33,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import FileUpload from "../file-upload";
 
 const CATEGORY_TYPE = ["MUSIC", "GAMING", "NEWS", "SPORTS"];
 
@@ -43,13 +42,11 @@ const formSchema = z.object({
     .string()
     .min(5, "Description is required")
     .max(250, "Cannot be more than 250 characters"),
-  thumbnail: z.string().min(3, "Thumbnail is required"),
-  video: z.string().min(3, "Video is required"),
   category: z.enum(CATEGORY_TYPE),
 });
 
 export default function NewVideoModal() {
-  const { isOpen, type, onClose, data } = useModal();
+  const { onOpen,isOpen, type, onClose, data } = useModal();
 
   const isModalOpen = isOpen && type === "newVideo";
   const router = useRouter();
@@ -61,8 +58,6 @@ export default function NewVideoModal() {
     defaultValues: {
       name: "",
       description: "",
-      thumbnail: "",
-      video: "",
       category: "",
     },
   });
@@ -71,7 +66,7 @@ export default function NewVideoModal() {
 
   const onSubmit = async (values) => {
     try {
-      console.log(values);
+      onOpen("completeVideo",{info:values});
     } catch (err) {
       console.log(err);
       alert(err.message);
@@ -96,7 +91,7 @@ export default function NewVideoModal() {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="space-y-8 px-6">
+            <div className="space-y-8 px-6 pb-6">
               <FormField
                 control={form.control}
                 name="name"
@@ -171,7 +166,7 @@ export default function NewVideoModal() {
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="thumbnail"
                 render={({ field }) => (
@@ -186,10 +181,25 @@ export default function NewVideoModal() {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="thumbnail"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <FileUpload
+                        endpoint="thumbnail"
+                        onChange={field.onChange}
+                        value={field.value}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              /> */}
             </div>
             <DialogFooter className="bg-gray-100">
               <Button disabled={isLoading} variant="outline">
-                Upload
+                Next
               </Button>
             </DialogFooter>
           </form>

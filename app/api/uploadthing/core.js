@@ -15,4 +15,26 @@ export const ourFileRouter = {
       console.log("Upload complete for userId:", metadata.userName);
       console.log("file url", file.url);
     }),
+    thumbnail: f({ image: { maxFileSize: "2MB", maxFileCount: 1 } })
+    .middleware(async ({ req }) => {
+      const session = await getServerSession();
+      if (!session.user) throw new Error("Unauthorized");
+      //       console.log(session.user);
+      return { userName: session.user?.name };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Upload complete for userId:", metadata.userName);
+      console.log("file url", file.url);
+    }),
+    newVideo: f({ video: { maxFileSize: "200MB", maxFileCount: 1 } })
+    .middleware(async ({ req }) => {
+      const session = await getServerSession();
+      if (!session.user) throw new Error("Unauthorized");
+      //       console.log(session.user);
+      return { userName: session.user?.name };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Upload complete for userId:", metadata.userName);
+      console.log("file url", file.url);
+    }),
 };
