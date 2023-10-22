@@ -33,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useState } from "react";
 
 const CATEGORY_TYPE = ["MUSIC", "GAMING", "NEWS", "SPORTS"];
 
@@ -49,6 +50,7 @@ export default function NewVideoModal() {
   const { onOpen,isOpen, type, onClose, data } = useModal();
 
   const isModalOpen = isOpen && type === "newVideo";
+  // const [secondaryCategory, setSecondaryCategory] = useState(false); for 2nd category
   const router = useRouter();
 
   const { data: session } = useSession();
@@ -166,36 +168,6 @@ export default function NewVideoModal() {
                   </FormItem>
                 )}
               />
-              {/* <FormField
-                control={form.control}
-                name="thumbnail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FileUpload
-                        endpoint="thumbnail"
-                        onChange={field.onChange}
-                        value={field.value}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="thumbnail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FileUpload
-                        endpoint="thumbnail"
-                        onChange={field.onChange}
-                        value={field.value}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              /> */}
             </div>
             <DialogFooter className="bg-gray-100">
               <Button disabled={isLoading} variant="outline">

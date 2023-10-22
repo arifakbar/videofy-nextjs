@@ -1,15 +1,7 @@
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"; //For form Validation
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+import { Form, FormControl, FormField, FormItem } from "../ui/form";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -25,16 +17,9 @@ import { useModal } from "@/hooks/use-modal";
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Textarea } from "../ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import FileUpload from "../file-upload";
 import { Separator } from "../ui/separator";
+import axios from "axios";
 
 const formSchema = z.object({
   thumbnail: z.string().min(3, "Thumbnail is required"),
@@ -42,14 +27,14 @@ const formSchema = z.object({
 });
 
 export default function CompleteVideoModal() {
-  const { onOpen,isOpen, type, onClose, data } = useModal();
+  const { onOpen, isOpen, type, onClose, data } = useModal();
 
   const isModalOpen = isOpen && type === "completeVideo";
   const router = useRouter();
 
   const { data: session } = useSession();
 
-  const {info} = data;
+  const { info } = data;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -63,8 +48,12 @@ export default function CompleteVideoModal() {
 
   const onSubmit = async (values) => {
     try {
-      let newValues = {...values, ...info, ...{userId:session.user.id}};
-      console.log("NV:",newValues);
+      let newValues = { ...values, ...info, ...{ userId: session.user.id } };
+      console.log("NV:", newValues);
+      await axios.post("/api/user/video", newValues);
+      form.reset();
+      router.refresh();
+      window.location.reload();
     } catch (err) {
       console.log(err);
       alert(err.message);
@@ -76,10 +65,10 @@ export default function CompleteVideoModal() {
     onClose();
   };
 
-  const handleBack = (e) =>{
+  const handleBack = (e) => {
     e.stopPropagation();
     onOpen("newVideo");
-  }
+  };
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
@@ -89,9 +78,13 @@ export default function CompleteVideoModal() {
             New Video
           </DialogTitle>
           <div className="absolute">
-          <Button disabled={isLoading} variant="outline" onClick={(e)=>handleBack(e)}>
-                Back
-          </Button>
+            <Button
+              disabled={isLoading}
+              variant="outline"
+              onClick={(e) => handleBack(e)}
+            >
+              Back
+            </Button>
           </div>
           <DialogDescription className="text-center text-zinc-500">
             Upload your new video.
@@ -105,7 +98,9 @@ export default function CompleteVideoModal() {
                 name="thumbnail"
                 render={({ field }) => (
                   <FormItem className="flex flex-col items-center">
-                    <label className="text-zinc-400 dark:text-zinc-500 font-semibold underline">Thumbnail</label>
+                    <label className="text-zinc-400 dark:text-zinc-500 font-semibold underline">
+                      Thumbnail
+                    </label>
                     <FormControl>
                       <FileUpload
                         endpoint="thumbnail"
@@ -122,7 +117,9 @@ export default function CompleteVideoModal() {
                 name="video"
                 render={({ field }) => (
                   <FormItem className="flex flex-col items-center">
-                    <label className="text-zinc-400 dark:text-zinc-500 font-semibold underline">Video</label>
+                    <label className="text-zinc-400 dark:text-zinc-500 font-semibold underline">
+                      Video
+                    </label>
                     <FormControl>
                       <FileUpload
                         endpoint="newVideo"

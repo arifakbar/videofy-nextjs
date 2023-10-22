@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const { Schema } = mongoose;
-const { ObjectId } = Schema;
+const { ObjectId } = Schema.Types;
 
 const userSchema = new Schema(
   {
