@@ -34,7 +34,7 @@ export default function UserVideoCard({ video }) {
         />
       </div>
       <div className="flex gap-x-3 items-center mt-2">
-        <div className="flex flex-col items-start w-[80%] justify-center">
+        <div className="flex flex-col items-start w-full justify-center">
           <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
             {video?.name}
           </p>
@@ -55,20 +55,12 @@ export default function UserVideoCard({ video }) {
             Category - <b>{video?.category}</b>
           </small>
         </div>
-        <div className="flex gap-x-3">
-          <ActionTooltip label="Edit">
-            <Edit2
-              className="w-5 h-5 cursor-pointer hover:text-green-500"
-              onClick={() => onOpen("editUserVideo", { video: {}, user: {} })}
-            />
-          </ActionTooltip>
-          <ActionTooltip label="Delete">
-            <Trash2
-              className="w-5 h-5 cursor-pointer hover:text-red-500 transition"
-              onClick={() => onOpen("deleteUserVideo", { video: {}, user: {} })}
-            />
-          </ActionTooltip>
-        </div>
+        <ActionTooltip label="Delete">
+          <Trash2
+            className="w-5 h-5 cursor-pointer hover:text-red-500 transition"
+            onClick={() => onOpen("deleteUserVideo", { videoId: video?._id })}
+          />
+        </ActionTooltip>
       </div>
     </div>
   );
