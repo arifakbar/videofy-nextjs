@@ -32,18 +32,24 @@ const videoSchema = new Schema(
       type: ObjectId,
       ref: "User",
     },
-    views: {
-      type: Number,
-      default: 0,
-    },
-    likes: {
-      type: Number,
-      default: 0,
-    },
-    dislikes: {
-      type: Number,
-      default: 0,
-    },
+    views: [
+      {
+        type: ObjectId,
+        ref: "User",
+      },
+    ],
+    likes: [
+      {
+        type: ObjectId,
+        ref: "User",
+      },
+    ],
+    dislikes: [
+      {
+        type: ObjectId,
+        ref: "User",
+      },
+    ],
     comments: [
       {
         type: ObjectId,

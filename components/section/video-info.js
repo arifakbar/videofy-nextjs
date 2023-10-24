@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function VideoInfo({ video }) {
   const { onOpen } = useModal();
 
-  console.log("VID: ", video);
+  // console.log("VID: ", video);
 
   const [showMore, setShowMore] = useState(false);
 

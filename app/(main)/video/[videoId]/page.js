@@ -18,6 +18,15 @@ export default function Video() {
   const [loading, setLoading] = useState(false);
   const [video, setVideo] = useState({});
 
+  //liked, unliked, disliked, undisliked
+
+  const [liked, setLiked] = useState(false);
+  const [unliked, setUnliked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
+  const [undisliked, setUndisliked] = useState(false);
+
+  const [totalLikes, setTotalLikes] = useState(0);
+
   useEffect(() => {
     loadVideo();
   }, [videoId]);
@@ -27,11 +36,64 @@ export default function Video() {
       setLoading(true);
       const res = await axios.get(`/api/video/${videoId}`);
       setVideo(res.data.data);
-      console.log("RES: ", res.data.data);
+      // console.log("RES: ", res.data.data);
+      setTotalLikes(res.data.data.likes?.length);
       setLoading(false);
     } catch (err) {
       setLoading(false);
       console.log(err);
+    }
+  };
+
+  const updatedVideo = async (liked, unliked, disliked, undisliked) => {
+    try {
+      const res = await axios.patch(`/api/user/video/${videoId}`, {
+        liked,
+        unliked,
+        disliked,
+        undisliked,
+      });
+      console.log("UPDATED:", res.data.data);
+      setVideo({ ...video, likes: res.data.data.likes });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  // console.log("Outside ", liked, unliked, disliked, undisliked);
+
+  const handleClick = async (type) => {
+    if (type === "liked") {
+      if (liked === false) {
+        setTotalLikes(totalLikes + 1);
+        setLiked(true);
+        setDisliked(false);
+        setUnliked(false);
+        setDisliked(false);
+        updatedVideo(true, false, false, false);
+      } else {
+        setTotalLikes(totalLikes - 1);
+        setUnliked(true);
+        setLiked(false);
+        setDisliked(false);
+        setUndisliked(false);
+        updatedVideo(false, true, false, false);
+      }
+    } else {
+      if (disliked === false) {
+        if (liked) setTotalLikes(totalLikes - 1);
+        setDisliked(true);
+        setLiked(false);
+        setUndisliked(false);
+        setUnliked(false);
+        updatedVideo(false, false, true, false);
+      } else {
+        if (liked) setTotalLikes(totalLikes - 1);
+        setUndisliked(true);
+        setDisliked(false);
+        setLiked(false);
+        setUnliked(false);
+        updatedVideo(false, false, false, true);
+      }
     }
   };
 
@@ -45,12 +107,29 @@ export default function Video() {
           <div className="h-[10%] flex justify-between items-center ">
             <div className="flex gap-x-4">
               <div className="flex gap-x-2 items-center">
-                <ThumbsUp className="h-5 w-5 text-zinc-500 dark:text-zinc-400 cursor-pointer" />{" "}
-                <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-                  {video?.likes}
+                <ThumbsUp
+                  onClick={() => handleClick("liked")}
+                  className={`h-5 w-5  cursor-pointer ${
+                    liked
+                      ? "text-red-500 dark:text-red-400"
+                      : "text-zinc-500 dark:text-zinc-400"
+                  }`}
+                />{" "}
+                <p
+                  className="text-sm font-semibold 
+                text-zinc-500 dark:text-zinc-400"
+                >
+                  {video?.likes?.length}
                 </p>
               </div>
-              <ThumbsDown className="h-5 w-5 text-zinc-500 dark:text-zinc-400 cursor-pointer" />
+              <ThumbsDown
+                onClick={() => handleClick("disliked")}
+                className={`h-5 w-5 ${
+                  disliked
+                    ? "text-red-500 dark:text-red-400"
+                    : "text-zinc-500 dark:text-zinc-400"
+                }`}
+              />
             </div>
             <Button variant="outline">Subscribe</Button>
           </div>

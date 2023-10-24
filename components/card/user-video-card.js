@@ -40,15 +40,15 @@ export default function UserVideoCard({ video }) {
           </p>
           <div className="flex gap-x-2 items-center">
             <small className="text-xs text-zinc-500 dark:text-zinc-400">
-              {video?.views} views
+              {video?.views?.length} views
             </small>
             <p>-</p>
             <small className="text-xs text-zinc-500 dark:text-zinc-400">
-              {video?.likes} Likes
+              {video?.likes?.length} Likes
             </small>
             <p>-</p>
             <small className="text-xs text-zinc-500 dark:text-zinc-400">
-              {video?.dislikes} Dislikes
+              {video?.dislikes?.length} Dislikes
             </small>
           </div>
           <small className="text-xs text-zinc-500 dark:text-zinc-400">
