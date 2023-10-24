@@ -11,12 +11,14 @@ import VideoInfo from "@/components/section/video-info";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import SpinLoading from "@/components/spinLoading";
+import { useSession } from "next-auth/react";
 
 export default function Video() {
   const params = useParams();
   const { videoId } = params;
   const [loading, setLoading] = useState(false);
   const [video, setVideo] = useState({});
+  const { data: session } = useSession();
 
   //liked, unliked, disliked, undisliked
 
@@ -25,8 +27,6 @@ export default function Video() {
   const [disliked, setDisliked] = useState(false);
   const [undisliked, setUndisliked] = useState(false);
 
-  const [totalLikes, setTotalLikes] = useState(0);
-
   useEffect(() => {
     loadVideo();
   }, [videoId]);
@@ -34,10 +34,18 @@ export default function Video() {
   const loadVideo = async () => {
     try {
       setLoading(true);
+      if (session.user) {
+        alert("hi");
+        await axios.patch(`/api/video/views/${videoId}`, {
+          userId: session.user.id,
+        });
+      }
+      alert("Yo");
       const res = await axios.get(`/api/video/${videoId}`);
       setVideo(res.data.data);
+      if (res.data.data?.likes.includes(session.user.id)) setLiked(true);
+      if (res.data.data?.dislikes.includes(session.user.id)) setDisliked(true);
       // console.log("RES: ", res.data.data);
-      setTotalLikes(res.data.data.likes?.length);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -59,19 +67,16 @@ export default function Video() {
       console.log(err);
     }
   };
-  // console.log("Outside ", liked, unliked, disliked, undisliked);
 
   const handleClick = async (type) => {
     if (type === "liked") {
       if (liked === false) {
-        setTotalLikes(totalLikes + 1);
         setLiked(true);
         setDisliked(false);
         setUnliked(false);
         setDisliked(false);
         updatedVideo(true, false, false, false);
       } else {
-        setTotalLikes(totalLikes - 1);
         setUnliked(true);
         setLiked(false);
         setDisliked(false);
@@ -80,14 +85,12 @@ export default function Video() {
       }
     } else {
       if (disliked === false) {
-        if (liked) setTotalLikes(totalLikes - 1);
         setDisliked(true);
         setLiked(false);
         setUndisliked(false);
         setUnliked(false);
         updatedVideo(false, false, true, false);
       } else {
-        if (liked) setTotalLikes(totalLikes - 1);
         setUndisliked(true);
         setDisliked(false);
         setLiked(false);
@@ -124,7 +127,7 @@ export default function Video() {
               </div>
               <ThumbsDown
                 onClick={() => handleClick("disliked")}
-                className={`h-5 w-5 ${
+                className={`h-5 w-5 cursor-pointer ${
                   disliked
                     ? "text-red-500 dark:text-red-400"
                     : "text-zinc-500 dark:text-zinc-400"

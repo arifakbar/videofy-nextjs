@@ -57,6 +57,11 @@ export async function PATCH(req, { params }) {
         },
         { new: true }
       );
+      await User.findByIdAndUpdate(userId, {
+        $push: {
+          likedVideos: videoId,
+        },
+      });
     } else if (unliked) {
       updatedVideo = await Video.findByIdAndUpdate(
         videoId,
@@ -67,6 +72,11 @@ export async function PATCH(req, { params }) {
         },
         { new: true }
       );
+      await User.findByIdAndUpdate(userId, {
+        $pull: {
+          likedVideos: videoId,
+        },
+      });
     }
     //Diskliked
     if (disliked) {
@@ -82,6 +92,11 @@ export async function PATCH(req, { params }) {
         },
         { new: true }
       );
+      await User.findByIdAndUpdate(userId, {
+        $pull: {
+          likedVideos: videoId,
+        },
+      });
     } else if (undisliked) {
       updatedVideo = await Video.findByIdAndUpdate(
         videoId,

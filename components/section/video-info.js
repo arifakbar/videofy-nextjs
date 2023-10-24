@@ -31,9 +31,14 @@ export default function VideoInfo({ video }) {
       </div>
       <div className="flex justify-between">
         <div className="flex flex-col gap-y-2 items-start w-full">
-          <h3 className="text-xl font-semibold text-black dark:text-white">
-            {video?.name}
-          </h3>
+          <div className="flex w-full items-center justify-between">
+            <h3 className="text-xl font-semibold text-black dark:text-white">
+              {video?.name}
+            </h3>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              {video?.views?.length} views
+            </p>
+          </div>
           <div className="w-full flex gap-y-4 md:items-center justify-between">
             <div className="flex gap-x-2 items-center">
               <div onClick={handleUserClick} className="cursor-pointer over">
