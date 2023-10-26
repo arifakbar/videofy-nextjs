@@ -29,23 +29,23 @@ export default function Video() {
 
   useEffect(() => {
     loadVideo();
-  }, [videoId]);
+  }, [videoId, session]);
 
   const loadVideo = async () => {
     try {
       setLoading(true);
+      let res = {};
       if (session.user) {
-        alert("hi");
-        await axios.patch(`/api/video/views/${videoId}`, {
+        res = await axios.patch(`/api/video/${videoId}`, {
           userId: session.user.id,
         });
+      } else {
+        res = await axios.get(`/api/video/${videoId}`);
       }
-      alert("Yo");
-      const res = await axios.get(`/api/video/${videoId}`);
       setVideo(res.data.data);
       if (res.data.data?.likes.includes(session.user.id)) setLiked(true);
       if (res.data.data?.dislikes.includes(session.user.id)) setDisliked(true);
-      // console.log("RES: ", res.data.data);
+      console.log("RES: ", res.data.data);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -107,7 +107,7 @@ export default function Video() {
       <div className="mb-4 flex flex-col md:flex-row justify-between">
         <VideoInfo video={video} />
         <div className="h-[40vh] my-2 md:my-0 md:h-[60vh] md:w-[29%] flex flex-col gap-y-4 md:gap-y-0 md:justify-between">
-          <div className="h-[10%] flex justify-between items-center ">
+          <div className="h-[10%] flex justify-between items-center md:mb-2">
             <div className="flex gap-x-4">
               <div className="flex gap-x-2 items-center">
                 <ThumbsUp

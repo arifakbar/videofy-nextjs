@@ -9,13 +9,40 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import SpinLoading from "../spinLoading";
+import axios from "axios";
 
-export default function WatchLater({ id }) {
+export default function WatchLater({ videoId, user }) {
   const [added, setAdded] = useState(true);
+  const [loading, setLoading] = useState(false);
+  let type = "";
 
-  const onClick = (id) => {
+  useEffect(() => {
+    check();
+  }, [videoId, user]);
+
+  const check = () => {
+    if (user?.watchLater.includes(videoId)) {
+      setAdded(false);
+      type = "remove";
+    }
+  };
+
+  const onClick = async () => {
     setAdded(!added);
+    try {
+      setLoading(true);
+      added ? (type = "add") : (type = "remove");
+      const res = await axios.patch(`/api/user/video/${videoId}/watch_later`, {
+        type,
+      });
+      console.log("RDD: ", res.data.data);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
   };
 
   return (
@@ -26,14 +53,22 @@ export default function WatchLater({ id }) {
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>
-            {!added ? "Added to Watch Later" : "Removed from watch later"}
-          </AlertDialogTitle>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogAction>Close</AlertDialogAction>
-        </AlertDialogFooter>
+        {loading ? (
+          <div className="h-[150px] flex items-center justify-center">
+            <SpinLoading />
+          </div>
+        ) : (
+          <>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                {!added ? "Added to Watch Later" : "Removed from watch later"}
+              </AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction>Close</AlertDialogAction>
+            </AlertDialogFooter>
+          </>
+        )}
       </AlertDialogContent>
     </AlertDialog>
   );

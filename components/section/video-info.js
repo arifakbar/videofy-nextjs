@@ -4,6 +4,7 @@ import WatchLater from "../watch-later/page";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 export default function VideoInfo({ video }) {
   const { onOpen } = useModal();
@@ -11,6 +12,8 @@ export default function VideoInfo({ video }) {
   // console.log("VID: ", video);
 
   const [showMore, setShowMore] = useState(false);
+
+  const { data: session } = useSession();
 
   const description = video?.description;
 
@@ -56,15 +59,17 @@ export default function VideoInfo({ video }) {
                 </p>
               </div>
             </div>
-            <div className="h-full flex justify-center md:flex-row flex-col gap-y-2 md:gap-x-2">
-              <WatchLater />
-              <Button
-                variant="outline"
-                onClick={() => onOpen("playlists", { toAdd: true })}
-              >
-                Add to Playlist
-              </Button>
-            </div>
+            {session && session.user && (
+              <div className="h-full flex justify-center md:flex-row flex-col gap-y-2 md:gap-x-2">
+                <WatchLater videoId={video?._id} user={video?.userId} />
+                <Button
+                  variant="outline"
+                  onClick={() => onOpen("playlists", { toAdd: true })}
+                >
+                  Add to Playlist
+                </Button>
+              </div>
+            )}
           </div>
           {description?.lenght > 250 ? (
             <div className="">
