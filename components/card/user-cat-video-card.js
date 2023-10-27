@@ -1,23 +1,71 @@
-import UserAvatar from "@/components/user-avatar";
 import { PlayCircle, Trash2 } from "lucide-react";
 import ActionTooltip from "../ui/action-tooltip";
-import { useModal } from "@/hooks/use-modal";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import SpinLoading from "../spinLoading";
+import axios from "axios";
 
-export default function UserCatVideoCard({ type, videoId }) {
+export default function UserCatVideoCard({ type, video }) {
   const onClick = () => {
-    if (type == "History") return alert("Remove From User History");
-    if (type == "Liked Videos") return alert("Remove From User Liked Video");
-    if (type == "Watch Later") return alert("Remove From User Watch Later");
+    if (type == "History") return removeFromHistory();
+    if (type == "Liked Videos") return removeFromLikedVideos();
+    if (type == "Watch Later") return removeFromWatchlater();
   };
+
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const onPlayClick = () => {
-    router.push(`/video/1`);
+    router.push(`/video/${video._id}`);
   };
 
-  return (
+  const removeFromWatchlater = async () => {
+    const type = "remove";
+    try {
+      setLoading(true);
+      await axios.patch(`/api/user/video/${video._id}/watch_later`, {
+        type,
+      });
+      router.refresh();
+      window.location.reload();
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  const removeFromHistory = async () => {
+    try {
+      setLoading(true);
+      await axios.patch(`/api/user/video/${video._id}/history`);
+      router.refresh();
+      window.location.reload();
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  const removeFromLikedVideos = async () => {
+    try {
+      setLoading(true);
+      await axios.patch(`/api/user/video/${video._id}/liked`);
+      router.refresh();
+      window.location.reload();
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  return loading ? (
+    <SpinLoading />
+  ) : (
     <div className={"w-[300px] m-3"}>
       <div
         className="h-[250px] relative overflow-hidden cursor-pointer"
@@ -29,7 +77,7 @@ export default function UserCatVideoCard({ type, videoId }) {
           </ActionTooltip>
         </div>
         <img
-          src="https://picsum.photos/200/300?random=7"
+          src={video?.thumbnail}
           alt="Video Banner"
           className="h-full w-full object-fit"
         />
@@ -37,7 +85,7 @@ export default function UserCatVideoCard({ type, videoId }) {
       <div className="flex gap-x-3 items-center mt-2">
         <div className="w-full flex items-center justify-between">
           <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-            Video Title
+            {video?.name}
           </p>
           <ActionTooltip label="Remove">
             <Trash2

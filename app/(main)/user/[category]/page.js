@@ -17,7 +17,7 @@ function UserCategories() {
 
   if (!avail.includes(decodeURI(category))) return redirect("/");
 
-  const [videos, setVideos] = useState({});
+  const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const { data: session } = useSession();
@@ -27,11 +27,18 @@ function UserCategories() {
   }, [session]);
 
   const loadVideos = async () => {
+    let search = "";
+    if (decodeURI(category) === "History") search = "history";
+    if (decodeURI(category) === "Watch Later") search = "watch_later";
+    if (decodeURI(category) === "Liked Videos") search = "liked";
     try {
       setLoading(true);
-      const res = await axios.get("/api/user/video/watch_later");
-      console.log(res.data.data?.watchLater);
-      setVideos(res.data.data?.watchLater);
+      const res = await axios.get(`/api/user/video/${search}`);
+      if (decodeURI(category) === "History") setVideos(res.data.data?.history);
+      if (decodeURI(category) === "Watch Later")
+        setVideos(res.data.data?.watchLater);
+      if (decodeURI(category) === "Liked Videos")
+        setVideos(res.data.data?.likedVideos);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -49,17 +56,10 @@ function UserCategories() {
       </div>
       <Separator className="h-[2px] bg-zinc-500 dark:bg-zinc-700 rounded-md w-full" />
       <div className="w-full flex justify-center flex-wrap">
-        <UserCatVideoCard type={decodeURI(category)} videoId={videos._id} />
-        <UserCatVideoCard type={decodeURI(category)} videoId={videos._id} />
-        <UserCatVideoCard type={decodeURI(category)} videoId={videos._id} />
-        <UserCatVideoCard type={decodeURI(category)} videoId={videos._id} />
-        <UserCatVideoCard type={decodeURI(category)} videoId={videos._id} />
-        <UserCatVideoCard type={decodeURI(category)} videoId={videos._id} />
-        <UserCatVideoCard type={decodeURI(category)} videoId={videos._id} />
-        <UserCatVideoCard type={decodeURI(category)} videoId={videos._id} />
-        <UserCatVideoCard type={decodeURI(category)} videoId={videos._id} />
-        <UserCatVideoCard type={decodeURI(category)} videoId={videos._id} />
-        <UserCatVideoCard type={decodeURI(category)} videoId={videos._id} />
+        {videos &&
+          videos?.map((v) => {
+            return <UserCatVideoCard type={decodeURI(category)} video={v} />;
+          })}
       </div>
     </div>
   );

@@ -29,6 +29,24 @@ export async function PATCH(req, { params }) {
     const session = await getServerSession();
     if (!session.user)
       return NextResponse.json({ error: "Unauthorized", status: 401 });
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        $pull: {
+          history: videoId,
+        },
+      },
+      { new: true }
+    );
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          history: videoId,
+        },
+      },
+      { new: true }
+    );
     const video = await Video.findById(videoId)
       .populate("userId", "name profilePic subscribers watchLater")
       .exec();
