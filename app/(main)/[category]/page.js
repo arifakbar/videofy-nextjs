@@ -4,6 +4,9 @@ import { redirect, useParams } from "next/navigation";
 
 import Banner from "@/components/banners/banner";
 import VideoCard from "@/components/card/video-card";
+import { useEffect, useState } from "react";
+import SpinLoading from "@/components/spinLoading";
+import axios from "axios";
 
 const iconMap = {
   ["Music"]:
@@ -21,25 +24,37 @@ const avail = ["Music", "Gaming", "News", "Sports"];
 export default function Categories() {
   const params = useParams();
   const { category } = params;
+  const [loading, setLoading] = useState(false);
+  const [videos, setVideos] = useState([]);
 
   if (!avail.includes(category)) return redirect("/");
 
+  useEffect(() => {
+    loadVideo();
+  }, []);
+
+  const loadVideo = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`/api/videos/${category}`);
+      setVideos(res.data.data);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
   const src = iconMap[category];
-  return (
+  return loading ? (
+    <SpinLoading />
+  ) : (
     <div>
       <Banner name={category} src={src} />
       <div className="w-full flex justify-center flex-wrap">
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
+        {videos?.map((v) => {
+          return <VideoCard className="w-[300px] m-3" video={v} />;
+        })}
       </div>
     </div>
   );

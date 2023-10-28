@@ -12,12 +12,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import SpinLoading from "@/components/spinLoading";
 import { useSession } from "next-auth/react";
+import ActionTooltip from "@/components/ui/action-tooltip";
 
 export default function Video() {
   const params = useParams();
   const { videoId } = params;
   const [loading, setLoading] = useState(false);
   const [video, setVideo] = useState({});
+
   const { data: session } = useSession();
 
   //liked, unliked, disliked, undisliked
@@ -35,13 +37,14 @@ export default function Video() {
     try {
       setLoading(true);
       let res = {};
-      if (session.user) {
+      if (session?.user) {
         res = await axios.patch(`/api/video/${videoId}`, {
           userId: session.user.id,
         });
       } else {
         res = await axios.get(`/api/video/${videoId}`);
       }
+      console.log(res.data.data);
       setVideo(res.data.data);
       if (res.data.data?.likes.includes(session.user.id)) setLiked(true);
       if (res.data.data?.dislikes.includes(session.user.id)) setDisliked(true);
@@ -69,6 +72,7 @@ export default function Video() {
   };
 
   const handleClick = async (type) => {
+    if (!session?.user) return;
     if (type === "liked") {
       if (liked === false) {
         setLiked(true);
@@ -112,11 +116,11 @@ export default function Video() {
               <div className="flex gap-x-2 items-center">
                 <ThumbsUp
                   onClick={() => handleClick("liked")}
-                  className={`h-5 w-5  cursor-pointer ${
+                  className={`h-5 w-5 ${
                     liked
                       ? "text-red-500 dark:text-red-400"
                       : "text-zinc-500 dark:text-zinc-400"
-                  }`}
+                  } ${session?.user ? "cursor-pointer" : "cursor-not-allowed"}`}
                 />{" "}
                 <p
                   className="text-sm font-semibold 
@@ -127,31 +131,37 @@ export default function Video() {
               </div>
               <ThumbsDown
                 onClick={() => handleClick("disliked")}
-                className={`h-5 w-5 cursor-pointer ${
+                className={`h-5 w-5 ${
                   disliked
                     ? "text-red-500 dark:text-red-400"
                     : "text-zinc-500 dark:text-zinc-400"
-                }`}
+                } ${session?.user ? "cursor-pointer" : "cursor-not-allowed"}`}
               />
             </div>
-            <Button variant="outline">Subscribe</Button>
+            {session?.user ? (
+              <Button variant="outline">Subscribe</Button>
+            ) : (
+              <ActionTooltip label="Login to Subscribe">
+                <Button variant="disabled">Subscribe</Button>
+              </ActionTooltip>
+            )}
           </div>
           <Comments />
         </div>
       </div>
       <Separator className="bg-zinc-500 dark:bg-zinc-400" />
       <div className=" mt-4 w-full flex justify-center flex-wrap">
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
-        <VideoCard className="w-[300px] m-3" />
+        <VideoCard className="w-[300px] m-3" video={video} />
+        <VideoCard className="w-[300px] m-3" video={video} />
+        <VideoCard className="w-[300px] m-3" video={video} />
+        <VideoCard className="w-[300px] m-3" video={video} />
+        <VideoCard className="w-[300px] m-3" video={video} />
+        <VideoCard className="w-[300px] m-3" video={video} />
+        <VideoCard className="w-[300px] m-3" video={video} />
+        <VideoCard className="w-[300px] m-3" video={video} />
+        <VideoCard className="w-[300px] m-3" video={video} />
+        <VideoCard className="w-[300px] m-3" video={video} />
+        <VideoCard className="w-[300px] m-3" video={video} />
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import ActionTooltip from "../ui/action-tooltip";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function VideoCard({ className, profile }) {
+export default function VideoCard({ className, profile, video }) {
   const [isLiked, setIsLiked] = useState(false);
 
   const handleLike = () => {
@@ -22,7 +22,7 @@ export default function VideoCard({ className, profile }) {
   const router = useRouter();
 
   const onClick = () => {
-    router.push(`/video/1`);
+    router.push(`/video/${video._id}`);
   };
 
   const onUserClick = () => {
@@ -41,7 +41,7 @@ export default function VideoCard({ className, profile }) {
           </ActionTooltip>
         </div>
         <img
-          src="https://picsum.photos/200/300?random=7"
+          src={video?.thumbnail}
           alt="Video Banner"
           className="h-full w-full object-fit"
         />
@@ -51,7 +51,7 @@ export default function VideoCard({ className, profile }) {
           <div onClick={onUserClick}>
             <UserAvatar
               className="cursor-pointer"
-              src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg"
+              src={video?.userId?.profilePic}
             />
           </div>
         )}
@@ -61,11 +61,11 @@ export default function VideoCard({ className, profile }) {
               className="text-sm font-semibold text-zinc-500 dark:text-zinc-400"
               onClick={onClick}
             >
-              Video Title
+              {video?.name}
             </p>
             {profile && (
               <small className="text-xs text-zinc-500 dark:text-zinc-400">
-                20 views - 10 likes
+                {video?.views?.length} views - {video?.likes?.length} likes
               </small>
             )}
             {!profile && (
@@ -73,13 +73,13 @@ export default function VideoCard({ className, profile }) {
                 className="text-xs text-zinc-500 dark:text-zinc-400 cursor-pointer"
                 onClick={onUserClick}
               >
-                Uploader Name
+                {video?.userId?.name}
               </small>
             )}
           </div>
           {!profile && (
             <small className="text-xs text-zinc-500 dark:text-zinc-400">
-              20 views
+              {video?.views?.length} views
             </small>
           )}
           {profile && !isLiked && (

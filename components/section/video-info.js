@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import ActionTooltip from "../ui/action-tooltip";
 
 export default function VideoInfo({ video }) {
   const { onOpen } = useModal();
@@ -59,7 +60,7 @@ export default function VideoInfo({ video }) {
                 </p>
               </div>
             </div>
-            {session && session.user && (
+            {session && session.user ? (
               <div className="h-full flex justify-center md:flex-row flex-col gap-y-2 md:gap-x-2">
                 <WatchLater videoId={video?._id} user={video?.userId} />
                 <Button
@@ -68,6 +69,15 @@ export default function VideoInfo({ video }) {
                 >
                   Add to Playlist
                 </Button>
+              </div>
+            ) : (
+              <div className="h-full flex justify-center md:flex-row flex-col gap-y-2 md:gap-x-2">
+                <ActionTooltip label="Login to access">
+                  <Button variant="disabled">Watch Later</Button>
+                </ActionTooltip>
+                <ActionTooltip label="Login to access">
+                  <Button variant="disabled">Add To Playlist</Button>
+                </ActionTooltip>
               </div>
             )}
           </div>
