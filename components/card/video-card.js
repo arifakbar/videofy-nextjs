@@ -26,7 +26,7 @@ export default function VideoCard({ className, profile, video }) {
   };
 
   const onUserClick = () => {
-    router.push(`/user/users/1`);
+    router.push(`/user/users/${video?.userId._id}`);
   };
 
   return (

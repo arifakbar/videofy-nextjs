@@ -21,7 +21,7 @@ export default function VideoInfo({ video }) {
   const router = useRouter();
 
   const handleUserClick = () => {
-    router.push("/user/users/1");
+    router.push(`/user/users/${video?.userId?._id}`);
   };
 
   return (
