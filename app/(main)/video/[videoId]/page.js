@@ -129,14 +129,22 @@ export default function Video() {
                   {video?.likes?.length}
                 </p>
               </div>
-              <ThumbsDown
-                onClick={() => handleClick("disliked")}
-                className={`h-5 w-5 ${
-                  disliked
-                    ? "text-red-500 dark:text-red-400"
-                    : "text-zinc-500 dark:text-zinc-400"
-                } ${session?.user ? "cursor-pointer" : "cursor-not-allowed"}`}
-              />
+              <div className="flex gap-x-2 items-center">
+                <ThumbsDown
+                  onClick={() => handleClick("disliked")}
+                  className={`h-5 w-5 ${
+                    disliked
+                      ? "text-red-500 dark:text-red-400"
+                      : "text-zinc-500 dark:text-zinc-400"
+                  } ${session?.user ? "cursor-pointer" : "cursor-not-allowed"}`}
+                />
+                <p
+                  className="text-sm font-semibold 
+                text-zinc-500 dark:text-zinc-400"
+                >
+                  {video?.dislikes?.length}
+                </p>
+              </div>
             </div>
             {session?.user ? (
               <Button variant="outline">Subscribe</Button>

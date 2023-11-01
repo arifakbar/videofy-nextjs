@@ -23,12 +23,31 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import ActionTooltip from "../ui/action-tooltip";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 export default function UserPlaylistsModal() {
   const { isOpen, type, data, onClose, onOpen } = useModal();
 
+  const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
+
   const isModalOpen = isOpen && type === "playlists";
   const router = useRouter();
+
+  useEffect(() => {
+    loadPlaylists();
+  }, [isOpen, session]);
+
+  const loadPlaylists = async () => {
+    try {
+      const res = await axios.get(`/api/user/playlists`);
+      console.log(res.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const onClick = (id) => {
     onClose();

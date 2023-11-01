@@ -25,18 +25,20 @@ import { useModal } from "@/hooks/use-modal";
 import { useEffect } from "react";
 
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import axios from "axios";
 
 const formSchema = z.object({
   name: z.string().min(3, "Name is required."),
 });
 
 export default function NewPlaylistModal() {
-  const { isOpen, type, onClose, data } = useModal();
+  const { isOpen, type, onClose } = useModal();
 
   const isModalOpen = isOpen && type === "newPlaylist";
   const router = useRouter();
 
-  const { user } = data;
+  const { data: session } = useSession();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -49,7 +51,8 @@ export default function NewPlaylistModal() {
 
   const onSubmit = async (values) => {
     try {
-      console.log(values);
+      await axios.post("/api/user/playlists", { name: values.name });
+      handleClose();
     } catch (err) {
       console.log(err);
       alert(err.message);
