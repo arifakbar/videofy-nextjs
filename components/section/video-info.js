@@ -65,7 +65,9 @@ export default function VideoInfo({ video }) {
                 <WatchLater videoId={video?._id} user={video?.userId} />
                 <Button
                   variant="outline"
-                  onClick={() => onOpen("playlists", { toAdd: true })}
+                  onClick={() =>
+                    onOpen("playlists", { toAdd: true, videoId: video?._id })
+                  }
                 >
                   Add to Playlist
                 </Button>

@@ -33,7 +33,7 @@ const formSchema = z.object({
 });
 
 export default function NewPlaylistModal() {
-  const { isOpen, type, onClose } = useModal();
+  const { isOpen, type, onClose, onOpen } = useModal();
 
   const isModalOpen = isOpen && type === "newPlaylist";
   const router = useRouter();
@@ -52,7 +52,8 @@ export default function NewPlaylistModal() {
   const onSubmit = async (values) => {
     try {
       await axios.post("/api/user/playlists", { name: values.name });
-      handleClose();
+      form.reset();
+      onClose();
     } catch (err) {
       console.log(err);
       alert(err.message);
@@ -61,7 +62,7 @@ export default function NewPlaylistModal() {
 
   const handleClose = () => {
     form.reset();
-    onClose();
+    onOpen("playlists");
   };
 
   return (
