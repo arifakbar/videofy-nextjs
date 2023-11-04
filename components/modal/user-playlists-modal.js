@@ -32,8 +32,6 @@ export default function UserPlaylistsModal() {
   const { isOpen, type, data, onClose, onOpen } = useModal();
   const [playlists, setPlaylists] = useState([]);
 
-  const [test, setTest] = useState([]);
-
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
 
@@ -50,17 +48,8 @@ export default function UserPlaylistsModal() {
     try {
       setLoading(true);
       const res = await axios.get(`/api/user/playlists`);
-      // setTest([]);
-      // if (toAdd) {
-      //   res.data.playlist.map((p) => {
-      //     if (p.videos.includes(videoId)) {
-      //       setTest([...test, p._id]);
-      //     }
-      //   });
-      // }
-      // console.log(res.data.data.userPlaylists);
-      setCheck(res.data.playlist);
       setPlaylists(res.data.data.userPlaylists);
+      // console.log(res.data.data.userPlaylists);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -90,7 +79,6 @@ export default function UserPlaylistsModal() {
   };
 
   const handleAdd = async (id) => {
-    // alert(`Add ${id} - Video ${videoId}`);
     try {
       setLoading(true);
       await axios.patch(`/api/user/playlists/${id}`, {
@@ -106,7 +94,6 @@ export default function UserPlaylistsModal() {
   };
 
   const handleRemove = async (id) => {
-    // alert(`Remove ${id} - Video ${videoId}`);
     try {
       setLoading(true);
       await axios.patch(`/api/user/playlists/${id}`, {
@@ -120,8 +107,6 @@ export default function UserPlaylistsModal() {
       setLoading(false);
     }
   };
-
-  console.log("TEST: ", test);
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
@@ -154,7 +139,7 @@ export default function UserPlaylistsModal() {
                         onClick={() => onClick(p._id)}
                         className="pr-2 transition text-start cursor-pointer font-semibold text-sm text-zinc-500 dark:text-zinc-400 dark:hover:text-white hover:text-black "
                       >
-                        {p._id}
+                        {p.name}
                       </p>
                       {!toAdd ? (
                         <AlertDialog>
@@ -183,7 +168,7 @@ export default function UserPlaylistsModal() {
                       ) : (
                         <AlertDialog>
                           <AlertDialogTrigger>
-                            {!test.includes(p._id) ? (
+                            {!p.videos.includes(videoId) ? (
                               <ActionTooltip label="Add">
                                 <PlusSquare className="w-5 h-5 text-zinc-500 dark:text-zinc-400 hover:text-green-500 dark:hover:text-green-500 transition cursor-pointer" />
                               </ActionTooltip>
@@ -195,7 +180,7 @@ export default function UserPlaylistsModal() {
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              {!test.includes(p._id) ? (
+                              {!p.videos.includes(videoId) ? (
                                 <AlertDialogTitle>
                                   Add to {p?.name} Playlist?
                                 </AlertDialogTitle>
@@ -207,7 +192,7 @@ export default function UserPlaylistsModal() {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>No</AlertDialogCancel>
-                              {!test.includes(p._id) ? (
+                              {!p.videos.includes(videoId) ? (
                                 <AlertDialogAction
                                   onClick={() => handleAdd(p._id)}
                                 >

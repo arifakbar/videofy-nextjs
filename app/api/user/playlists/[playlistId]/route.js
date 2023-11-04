@@ -68,7 +68,7 @@ export async function PATCH(req, { params }) {
   }
 }
 
-export async function GET(req, params) {
+export async function GET(req, { params }) {
   try {
     const session = await getServerSession();
     const { playlistId } = params;
