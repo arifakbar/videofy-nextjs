@@ -5,7 +5,9 @@ import User from "@/models/user";
 export async function GET(req, { params }) {
   try {
     const { userId } = params;
-    const user = await User.findById(userId).populate("userPlaylists");
+    const user = await User.findById(userId)
+      .populate("userPlaylists")
+      .populate("userVideos");
     if (!user)
       return NextResponse.json({ error: "User Not Found", status: 404 });
     return NextResponse.json({ data: user, status: 201 });

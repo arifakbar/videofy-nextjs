@@ -41,6 +41,7 @@ export default function UsersProfile() {
       setLoading(true);
       const res = await axios.get(`/api/user/${id}`);
       setUser(res.data.data);
+      console.log(res.data.data);
       setLoading(false);
     } catch (err) {
       setLoading(false);

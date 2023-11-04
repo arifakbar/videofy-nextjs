@@ -58,8 +58,8 @@ export default function UserPlaylist() {
     }
   };
 
-  const handleUserClick = () => {
-    router.push("/user/users/1");
+  const handleUserClick = (id) => {
+    router.push(`/user/users/${id}`);
   };
 
   const onPlayClick = (id) => {
@@ -96,14 +96,23 @@ export default function UserPlaylist() {
       ) : (
         <>
           <div className="w-full md:w-[70%] md:h-full min-h-[60%] flex flex-col gap-2">
-            <div className="w-full h-[75%] bg-pink-200">Video Player</div>
+            <div className="w-full h-[75%] bg-pink-200">
+              <img
+                src={mainVideo?.thumbnail}
+                alt="NF"
+                className="w-full h-full object-fill"
+              />
+            </div>
             <div className="flex flex-col gap-y-2 items-start w-full">
               <h3 className="text-xl font-semibold text-black dark:text-white">
                 {mainVideo?.name}
               </h3>
               <div className="w-full flex gap-y-4 md:items-center justify-between">
                 <div className="flex gap-x-2 items-center">
-                  <div onClick={handleUserClick} className="cursor-pointer">
+                  <div
+                    onClick={() => handleUserClick(mainVideo?.userId?._id)}
+                    className="cursor-pointer"
+                  >
                     <UserAvatar src={mainVideo?.userId?.profilePic} />
                   </div>
                   <div>
@@ -115,20 +124,6 @@ export default function UserPlaylist() {
                     </p>
                     <p className="text-xs text-zinc-500 dark:text-zinc-400">
                       {mainVideo?.userId?.subscribers} Subscribers
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-x-4 items-center">
-                  <div className="flex gap-x-2 items-center">
-                    <ThumbsUp className="h-5 w-5 text-zinc-500 dark:text-zinc-400 cursor-pointer" />{" "}
-                    <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-                      {mainVideo?.likes?.length}
-                    </p>
-                  </div>
-                  <div className="flex gap-x-2 items-center">
-                    <ThumbsDown className="h-5 w-5 text-zinc-500 dark:text-zinc-400 cursor-pointer" />
-                    <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-                      {mainVideo?.dislikes?.length}
                     </p>
                   </div>
                 </div>
@@ -189,7 +184,7 @@ export default function UserPlaylist() {
                         {v?.name}
                       </h3>
                       <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                        {description?.substring(0, 90)}...
+                        {v?.description?.substring(0, 90)}...
                       </p>
                     </div>
                     <div className="h-full w-[5%] flex items-center justify-center">
