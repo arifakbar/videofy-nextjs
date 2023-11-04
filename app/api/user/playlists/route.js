@@ -35,7 +35,8 @@ export async function GET(req, res) {
     const userPlaylists = await User.findOne({
       email: session.user.email,
     }).populate("userPlaylists");
-    return NextResponse.json({ data: userPlaylists, status: 201 });
+    const playlist = await Playlist.find({ userId: userPlaylists._id });
+    return NextResponse.json({ data: userPlaylists, playlist, status: 201 });
   } catch (err) {
     console.log("[PLAYLIST_GET_ERROR]: ", err);
     return NextResponse.json({ err: "Internal error", status: 500 });

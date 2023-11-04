@@ -11,7 +11,7 @@ import { useModal } from "@/hooks/use-modal";
 
 import { useRouter } from "next/navigation";
 import { ScrollArea } from "../ui/scroll-area";
-import { PlusSquare, Trash2 } from "lucide-react";
+import { MinusSquare, PlusSquare, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,20 +32,34 @@ export default function UserPlaylistsModal() {
   const { isOpen, type, data, onClose, onOpen } = useModal();
   const [playlists, setPlaylists] = useState([]);
 
+  const [test, setTest] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
+
+  const { toAdd, videoId } = data;
 
   const isModalOpen = isOpen && type === "playlists";
   const router = useRouter();
 
   useEffect(() => {
     loadPlaylists();
-  }, [isOpen, session]);
+  }, [isOpen, session?.user]);
 
   const loadPlaylists = async () => {
     try {
       setLoading(true);
       const res = await axios.get(`/api/user/playlists`);
+      // setTest([]);
+      // if (toAdd) {
+      //   res.data.playlist.map((p) => {
+      //     if (p.videos.includes(videoId)) {
+      //       setTest([...test, p._id]);
+      //     }
+      //   });
+      // }
+      // console.log(res.data.data.userPlaylists);
+      setCheck(res.data.playlist);
       setPlaylists(res.data.data.userPlaylists);
       setLoading(false);
     } catch (err) {
@@ -58,8 +72,6 @@ export default function UserPlaylistsModal() {
     onClose();
     router.push(`/user/playlist/${id}`);
   };
-
-  const { toAdd, videoId } = data;
 
   const handleClose = () => {
     onClose();
@@ -77,9 +89,39 @@ export default function UserPlaylistsModal() {
     }
   };
 
-  const handleAdd = (id) => {
-    alert(`Add ${id} - Video ${videoId}`);
+  const handleAdd = async (id) => {
+    // alert(`Add ${id} - Video ${videoId}`);
+    try {
+      setLoading(true);
+      await axios.patch(`/api/user/playlists/${id}`, {
+        videoId,
+        type: "add",
+      });
+      setLoading(false);
+      loadPlaylists();
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
   };
+
+  const handleRemove = async (id) => {
+    // alert(`Remove ${id} - Video ${videoId}`);
+    try {
+      setLoading(true);
+      await axios.patch(`/api/user/playlists/${id}`, {
+        videoId,
+        type: "remove",
+      });
+      setLoading(false);
+      loadPlaylists();
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  console.log("TEST: ", test);
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
@@ -112,7 +154,7 @@ export default function UserPlaylistsModal() {
                         onClick={() => onClick(p._id)}
                         className="pr-2 transition text-start cursor-pointer font-semibold text-sm text-zinc-500 dark:text-zinc-400 dark:hover:text-white hover:text-black "
                       >
-                        {p.name}
+                        {p._id}
                       </p>
                       {!toAdd ? (
                         <AlertDialog>
@@ -141,23 +183,43 @@ export default function UserPlaylistsModal() {
                       ) : (
                         <AlertDialog>
                           <AlertDialogTrigger>
-                            <ActionTooltip label="Add">
-                              <PlusSquare className="w-5 h-5 text-zinc-500 dark:text-zinc-400 hover:text-green-500 dark:hover:text-green-500 transition cursor-pointer" />
-                            </ActionTooltip>
+                            {!test.includes(p._id) ? (
+                              <ActionTooltip label="Add">
+                                <PlusSquare className="w-5 h-5 text-zinc-500 dark:text-zinc-400 hover:text-green-500 dark:hover:text-green-500 transition cursor-pointer" />
+                              </ActionTooltip>
+                            ) : (
+                              <ActionTooltip label="Remove">
+                                <MinusSquare className="w-5 h-5 text-zinc-500 dark:text-zinc-400 hover:text-red-500 dark:hover:text-red-500 transition cursor-pointer" />
+                              </ActionTooltip>
+                            )}
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Add to {p?.name} Playlist?
-                              </AlertDialogTitle>
+                              {!test.includes(p._id) ? (
+                                <AlertDialogTitle>
+                                  Add to {p?.name} Playlist?
+                                </AlertDialogTitle>
+                              ) : (
+                                <AlertDialogTitle>
+                                  Remove from {p?.name} Playlist?
+                                </AlertDialogTitle>
+                              )}
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>No</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleAdd(p._id)}
-                              >
-                                Yes
-                              </AlertDialogAction>
+                              {!test.includes(p._id) ? (
+                                <AlertDialogAction
+                                  onClick={() => handleAdd(p._id)}
+                                >
+                                  Yes
+                                </AlertDialogAction>
+                              ) : (
+                                <AlertDialogAction
+                                  onClick={() => handleRemove(p._id)}
+                                >
+                                  Yes
+                                </AlertDialogAction>
+                              )}
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>

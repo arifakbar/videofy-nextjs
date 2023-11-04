@@ -44,11 +44,11 @@ export default function Video() {
       } else {
         res = await axios.get(`/api/video/${videoId}`);
       }
-      console.log(res.data.data);
+      // console.log(res.data.data);
       setVideo(res.data.data);
       if (res.data.data?.likes.includes(session.user.id)) setLiked(true);
       if (res.data.data?.dislikes.includes(session.user.id)) setDisliked(true);
-      console.log("RES: ", res.data.data);
+      // console.log("RES: ", res.data.data);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -64,7 +64,7 @@ export default function Video() {
         disliked,
         undisliked,
       });
-      console.log("UPDATED:", res.data.data);
+      // console.log("UPDATED:", res.data.data);
       setVideo({ ...video, likes: res.data.data.likes });
     } catch (err) {
       console.log(err);
