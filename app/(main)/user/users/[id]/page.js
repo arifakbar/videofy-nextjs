@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { redirect, useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function UsersProfile() {
@@ -22,7 +22,11 @@ export default function UsersProfile() {
   const [subscribed, setSubscribed] = useState(false);
   const [btnText, setBtnText] = useState("Subscribe");
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status !== "loading" && (!session || !session.user)) {
+    return redirect("/");
+  }
 
   useEffect(() => {
     if (session?.user) {

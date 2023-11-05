@@ -30,8 +30,11 @@ function UserCategories() {
 
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { data: session, status } = useSession();
 
-  const { data: session } = useSession();
+  if (status !== "loading" && (!session || !session.user)) {
+    return redirect("/");
+  }
 
   useEffect(() => {
     loadVideos();

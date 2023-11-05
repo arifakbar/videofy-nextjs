@@ -14,15 +14,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { PlayCircle, ThumbsDown, ThumbsUp, Trash2 } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { PlayCircle, Trash2 } from "lucide-react";
+import { redirect, useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import SpinLoading from "@/components/spinLoading";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 export default function UserPlaylist() {
   const params = useParams();
   const router = useRouter();
+
+  const { data: session, status } = useSession();
+
+  if (status !== "loading" && (!session || !session.user)) {
+    return redirect("/");
+  }
 
   const [loading, setLoading] = useState(false);
   const [videos, setVideos] = useState([]);

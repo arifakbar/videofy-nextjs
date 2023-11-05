@@ -1,9 +1,11 @@
 import connect from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+import { utapi } from "@/app/api/uploadthing/route";
 
 import Video from "@/models/video";
 import User from "@/models/user";
+import axios from "axios";
 
 export async function DELETE(req, { params }) {
   try {
@@ -12,6 +14,7 @@ export async function DELETE(req, { params }) {
     const { user } = session;
     if (!user) return NextResponse.json({ error: "Unauthorized", status: 401 });
     const { videoId } = params;
+    const video = await Video.findById(videoId);
     await Video.findByIdAndDelete(videoId);
     await User.findOneAndUpdate(
       { email: user.email },
@@ -21,6 +24,7 @@ export async function DELETE(req, { params }) {
         },
       }
     );
+    await utapi.deleteFiles([video.thumbnail.slice(18), video.video.slice(18)]);
     return NextResponse.json({
       msg: "Video deleted successfully",
       status: 200,

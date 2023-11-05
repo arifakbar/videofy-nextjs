@@ -6,3 +6,8 @@ import { ourFileRouter } from "./core";
 export const { GET, POST } = createNextRouteHandler({
   router: ourFileRouter,
 });
+
+//For deletion
+import { UTApi } from "uploadthing/server";
+
+export const utapi = new UTApi();

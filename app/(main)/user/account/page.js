@@ -8,12 +8,20 @@ import { useModal } from "@/hooks/use-modal";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import axios from "axios";
 import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 function UserAccount() {
   const [loading, setLoading] = useState(false);
   const { onOpen } = useModal();
 
   const [currentUser, setCurrentUser] = useState({});
+
+  const { data: session, status } = useSession();
+
+  if (status !== "loading" && (!session || !session.user)) {
+    return redirect("/");
+  }
 
   useEffect(() => {
     loadCurrentUser();

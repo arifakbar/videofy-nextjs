@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { useModal } from "@/hooks/use-modal";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 
 export default function UserVideos() {
@@ -15,7 +16,11 @@ export default function UserVideos() {
   const [loading, setLoading] = useState(false);
   const [videos, setVideos] = useState({});
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status !== "loading" && (!session || !session.user)) {
+    return redirect("/");
+  }
 
   useEffect(() => {
     loadVideos();
