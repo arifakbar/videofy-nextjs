@@ -29,6 +29,8 @@ export default function Video() {
   const [disliked, setDisliked] = useState(false);
   const [undisliked, setUndisliked] = useState(false);
 
+  const [subscribed, setSubscribed] = useState(false);
+
   useEffect(() => {
     loadVideo();
   }, [videoId, session?.user?.id]);
@@ -48,6 +50,8 @@ export default function Video() {
       setVideo(res.data.data);
       if (res.data.data?.likes.includes(session.user.id)) setLiked(true);
       if (res.data.data?.dislikes.includes(session.user.id)) setDisliked(true);
+      if (res.data.data?.userId?.subscribers.includes(session.user.id))
+        setSubscribed(true);
       // console.log("RES: ", res.data.data);
       setLoading(false);
     } catch (err) {
@@ -104,6 +108,34 @@ export default function Video() {
     }
   };
 
+  const handleSubscribe = async () => {
+    try {
+      if (subscribed === true) {
+        // alert("remove");
+        const res = await axios.patch(
+          `/api/user/${video?.userId?._id}/subscribe`,
+          {
+            type: "remove",
+          }
+        );
+        setSubscribed(false);
+        console.log(res.data.data);
+      } else {
+        // alert("add");
+        const res = await axios.patch(
+          `/api/user/${video?.userId?._id}/subscribe`,
+          {
+            type: "add",
+          }
+        );
+        setSubscribed(true);
+        console.log(res.data.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return loading ? (
     <SpinLoading />
   ) : (
@@ -146,12 +178,18 @@ export default function Video() {
                 </p>
               </div>
             </div>
-            {session?.user ? (
-              <Button variant="outline">Subscribe</Button>
-            ) : (
-              <ActionTooltip label="Login to Subscribe">
-                <Button variant="disabled">Subscribe</Button>
-              </ActionTooltip>
+            {session?.user?.id !== video?.userId?._id && (
+              <>
+                {session?.user ? (
+                  <Button variant="outline" onClick={handleSubscribe}>
+                    {!subscribed ? "Subscribe" : "Unsubscribe"}
+                  </Button>
+                ) : (
+                  <ActionTooltip label="Login to Subscribe">
+                    <Button variant="disabled">Subscribe</Button>
+                  </ActionTooltip>
+                )}
+              </>
             )}
           </div>
           <Comments />

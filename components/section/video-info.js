@@ -51,7 +51,7 @@ export default function VideoInfo({ video }) {
                   {video?.userId?.name}
                 </p>
                 <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                  {video?.userId?.subscribers} Subscribers
+                  {video?.userId?.subscribers?.length} Subscribers
                 </p>
               </div>
             </div>

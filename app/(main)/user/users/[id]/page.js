@@ -81,7 +81,7 @@ export default function UsersProfile() {
               User name - {user?.name}
             </h3>
             <h3 className="text-xs md:text-sm text-zinc-500 dark:text-zinc-400">
-              Subscribers - {user?.subscribers}
+              Subscribers - {user?.subscribers?.length}
             </h3>
           </div>
         </div>

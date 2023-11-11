@@ -13,7 +13,7 @@ export default function CustomVideoPlayer({ url, className }) {
 
   return (
     <div
-      className={`relative overflow-hidden bg-gray-900 rounded-lg shadow-md ${className}`}
+      className={`relative overflow-hidden bg-gray-900 rounded-lg shadow-md pt-[1px] ${className}`}
     >
       <ReactPlayer
         url={url}
@@ -31,7 +31,7 @@ export default function CustomVideoPlayer({ url, className }) {
         }}
       />
       <div
-        className="absolute top-0 left-0 w-full h-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
+        className="absolute top-0 left-0 w-full h-[80%] flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
         onClick={togglePlayPause}
       >
         {isPlaying ? (

@@ -5,9 +5,27 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function SideSubscriptions() {
   const router = useRouter();
+
+  const [subscriptions, setSubscriptions] = useState([]);
+
+  useEffect(() => {
+    loadCurrentUser();
+  }, []);
+
+  const loadCurrentUser = async () => {
+    try {
+      const res = await axios.get("/api/user/currentUser");
+      console.log("SUBS: ", res.data.data);
+      setSubscriptions(res.data.data.subscriptions);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const onClick = (id) => {
     router.push(`/user/users/${id}`);
@@ -23,20 +41,29 @@ export default function SideSubscriptions() {
             Subscriptions
           </p>
         </AccordionTrigger>
-        {subs?.map((s) => {
+        {subscriptions?.map((s) => {
           return (
             <AccordionContent key={s}>
               <button
                 className="group px-2 py-2 rounded-md flex items-center w-full hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition"
-                onClick={() => onClick(s)}
+                onClick={() => onClick(s._id)}
               >
                 <p className="line-clamp-1 font-semibold text-sm text-zinc-500 dark:text-zinc-400 dark:group-hover:text-zinc-300 transition">
-                  Subscription {s}
+                  {s.name}
                 </p>
               </button>
             </AccordionContent>
           );
         })}
+        {subscriptions.length < 1 && (
+          <AccordionContent>
+            <button className="group px-2 py-2 rounded-md flex items-center w-full hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition">
+              <p className="line-clamp-1 font-semibold text-sm text-zinc-500 dark:text-zinc-400 dark:group-hover:text-zinc-300 transition">
+                No Subscriptions Yet!
+              </p>
+            </button>
+          </AccordionContent>
+        )}
       </AccordionItem>
     </Accordion>
   );
