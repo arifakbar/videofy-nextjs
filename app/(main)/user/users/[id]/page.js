@@ -20,7 +20,6 @@ export default function UsersProfile() {
   const { id } = params;
 
   const [subscribed, setSubscribed] = useState(false);
-  const [btnText, setBtnText] = useState("Subscribe");
 
   const { data: session, status } = useSession();
 
@@ -45,7 +44,8 @@ export default function UsersProfile() {
       setLoading(true);
       const res = await axios.get(`/api/user/${id}`);
       setUser(res.data.data);
-      console.log(res.data.data);
+      if (res.data.data?.subscribers.includes(session.user.id))
+        setSubscribed(true);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -53,17 +53,23 @@ export default function UsersProfile() {
     }
   };
 
-  const handleClick = () => {
-    if (subscribed === true) {
-      alert("Unsubscribed");
-      setSubscribed(false);
-      setBtnText("Subscribe");
-      router.refresh();
-    } else {
-      alert("Subscribed");
-      setSubscribed(true);
-      setBtnText("Unsubscribe");
-      router.refresh();
+  const handleSubscribe = async () => {
+    try {
+      if (subscribed === true) {
+        // alert("remove");
+        const res = await axios.patch(`/api/user/${user?._id}/subscribe`, {
+          type: "remove",
+        });
+        setSubscribed(false);
+      } else {
+        // alert("add");
+        const res = await axios.patch(`/api/user/${user?._id}/subscribe`, {
+          type: "add",
+        });
+        setSubscribed(true);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -86,12 +92,12 @@ export default function UsersProfile() {
           </div>
         </div>
         {session?.user ? (
-          <Button variant="destructive" onClick={handleClick}>
-            {btnText}
+          <Button variant="outline" onClick={handleSubscribe}>
+            {!subscribed ? "Subscribe" : "Unsubscribe"}
           </Button>
         ) : (
           <ActionTooltip label="Login to Subscribe">
-            <Button variant="disabled">{btnText}</Button>
+            <Button variant="disabled">Subscribe</Button>
           </ActionTooltip>
         )}
       </div>

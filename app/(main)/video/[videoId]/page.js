@@ -119,7 +119,6 @@ export default function Video() {
           }
         );
         setSubscribed(false);
-        console.log(res.data.data);
       } else {
         // alert("add");
         const res = await axios.patch(
@@ -129,7 +128,6 @@ export default function Video() {
           }
         );
         setSubscribed(true);
-        console.log(res.data.data);
       }
     } catch (err) {
       console.log(err);

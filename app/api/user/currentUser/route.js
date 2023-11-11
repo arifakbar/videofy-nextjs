@@ -10,7 +10,7 @@ export async function GET(req, res, next) {
     if (!session)
       return NextResponse.json({ error: "Unauthorized", status: 401 });
     const user = await User.findOne({ email: session.user?.email }).populate(
-      "subscriptions"
+      "subscriptions subscribers"
     );
     return NextResponse.json({ data: user, status: 200 });
   } catch (err) {
