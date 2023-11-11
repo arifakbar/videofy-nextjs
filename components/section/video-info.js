@@ -6,6 +6,7 @@ import { useModal } from "@/hooks/use-modal";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import ActionTooltip from "../ui/action-tooltip";
+import CustomVideoPlayer from "../customVideoPlayer";
 
 export default function VideoInfo({ video }) {
   const { onOpen } = useModal();
@@ -26,13 +27,7 @@ export default function VideoInfo({ video }) {
 
   return (
     <div className="flex flex-col gap-y-2 w-full md:w-[70%]">
-      <div className="w-full h-[60vh] bg-green-200">
-        <img
-          src={video?.thumbnail}
-          alt="NF"
-          className="w-full h-full object-fill"
-        />
-      </div>
+      <CustomVideoPlayer url={video.video} className="md:h-[60vh]" />
       <div className="flex justify-between">
         <div className="flex flex-col gap-y-2 items-start w-full">
           <div className="flex w-full items-center justify-between">

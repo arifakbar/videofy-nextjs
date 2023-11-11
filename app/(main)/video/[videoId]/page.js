@@ -31,7 +31,7 @@ export default function Video() {
 
   useEffect(() => {
     loadVideo();
-  }, [videoId, session]);
+  }, [videoId, session?.user?.id]);
 
   const loadVideo = async () => {
     try {

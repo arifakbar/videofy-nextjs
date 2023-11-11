@@ -9,16 +9,6 @@ import { useRouter } from "next/navigation";
 export default function VideoCard({ className, profile, video }) {
   const [isLiked, setIsLiked] = useState(false);
 
-  const handleLike = () => {
-    alert("Like Video");
-    setIsLiked(true);
-  };
-
-  const handleUnlike = () => {
-    alert("Unliked Video");
-    setIsLiked(false);
-  };
-
   const router = useRouter();
 
   const onClick = () => {
@@ -81,22 +71,6 @@ export default function VideoCard({ className, profile, video }) {
             <small className="text-xs text-zinc-500 dark:text-zinc-400">
               {video?.views?.length} views
             </small>
-          )}
-          {profile && !isLiked && (
-            <ActionTooltip label="Like">
-              <ThumbsUp
-                className="w-5 h-5 cursor-pointer hover:text-blue-500 transition"
-                onClick={handleLike}
-              />
-            </ActionTooltip>
-          )}
-          {profile && isLiked && (
-            <ActionTooltip label="Unlike">
-              <ThumbsDown
-                className="w-5 h-5 cursor-pointer hover:text-red-500 transition"
-                onClick={handleUnlike}
-              />
-            </ActionTooltip>
           )}
         </div>
       </div>

@@ -20,6 +20,8 @@ import { useEffect, useState } from "react";
 import SpinLoading from "@/components/spinLoading";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import ReactPlayer from "react-player/lazy";
+import CustomVideoPlayer from "@/components/customVideoPlayer";
 
 export default function UserPlaylist() {
   const params = useParams();
@@ -93,7 +95,7 @@ export default function UserPlaylist() {
   return loading ? (
     <SpinLoading />
   ) : (
-    <div className="p-2 h-[calc(100vh-70px)] flex md:flex-row flex-col items-center justify-between gap-2">
+    <div className="p-2 h-[calc(100vh-70px)] flex md:flex-row flex-col items-center gap-2">
       {videos.length < 1 ? (
         <div className="h-full w-full m-2">
           <p className="text-sm text-zinc-400 dark:text-zinc-500 font-semibold">
@@ -102,14 +104,8 @@ export default function UserPlaylist() {
         </div>
       ) : (
         <>
-          <div className="w-full md:w-[70%] md:h-full min-h-[60%] flex flex-col gap-2">
-            <div className="w-full h-[75%] bg-pink-200">
-              <img
-                src={mainVideo?.thumbnail}
-                alt="NF"
-                className="w-full h-full object-fill"
-              />
-            </div>
+          <div className="w-full md:w-[70%] md:h-full min-h-[45%] max-h-[100%] flex flex-col gap-2">
+            <CustomVideoPlayer url={mainVideo?.video} />
             <div className="flex flex-col gap-y-2 items-start w-full">
               <h3 className="text-xl font-semibold text-black dark:text-white">
                 {mainVideo?.name}
@@ -163,8 +159,11 @@ export default function UserPlaylist() {
               </ScrollArea>
             </div>
           </div>
-          <ScrollArea className="mt-4 md:mt-0 w-full md:w-[29%] border-2 border-zinc-500 dark:border-zinc-400 h-[35%] md:h-full">
-            <div className="flex flex-col gap-2 p-2 h-full">
+          <ScrollArea className="py-2 mt-4 md:mt-0 w-full md:w-[29%] border-2 border-zinc-500 dark:border-zinc-400 md:h-full">
+            <h4 className="font-xl pb-2 underline text-center font-semibold text-zinc-500 dark:text-zinc-400">
+              VIDEOS
+            </h4>
+            <div className="flex flex-col gap-3 p-2 h-full">
               {videos?.map((v) => {
                 return (
                   <div

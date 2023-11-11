@@ -24,9 +24,9 @@ export default function UsersProfile() {
 
   const { data: session, status } = useSession();
 
-  if (status !== "loading" && (!session || !session.user)) {
-    return redirect("/");
-  }
+  // if (status !== "loading" && (!session || !session.user)) {
+  //   return redirect("/");
+  // }
 
   useEffect(() => {
     if (session?.user) {
@@ -34,7 +34,7 @@ export default function UsersProfile() {
         router.push(`/user/videos`);
       }
     }
-  }, []);
+  }, [session]);
 
   useEffect(() => {
     loadUser();
