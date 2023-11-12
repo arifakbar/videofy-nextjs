@@ -27,7 +27,7 @@ export default function VideoInfo({ video }) {
 
   return (
     <div className="flex flex-col gap-y-2 w-full md:w-[70%]">
-      <CustomVideoPlayer url={video.video} className="md:h-[60vh]" />
+      <CustomVideoPlayer url={video?.video} className="md:h-[60vh]" />
       <div className="flex justify-between">
         <div className="flex flex-col gap-y-2 items-start w-full">
           <div className="flex w-full items-center justify-between">

@@ -11,6 +11,7 @@ export async function GET(req, { params }) {
     const { videoId } = params;
     const getVideo = await Video.findById(videoId)
       .populate("userId", "name profilePic subscribers watchLater")
+      .populate("comments")
       .exec();
     if (!getVideo)
       return NextResponse.json({ error: "Video Not found", status: 404 });

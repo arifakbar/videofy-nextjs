@@ -193,7 +193,7 @@ export default function Video() {
               </>
             )}
           </div>
-          <Comments />
+          <Comments videoId={videoId} initialComments={video?.comments} />
         </div>
       </div>
       <Separator className="bg-zinc-500 dark:bg-zinc-400" />
