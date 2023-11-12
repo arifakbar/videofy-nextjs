@@ -17,7 +17,7 @@ export default function SearchCard({ video }) {
         <Image src={video?.thumbnail} alt="NF" fill />
       </div>
       <div
-        className="h-full w-full flex flex-col px-4 justify-center gap-y-2 bg-zinc-400 dark:bg-zinc-700 hover:backdrop-blur-md hover:bg-opacity-30 dark:hover:bg-opacity-30 transition-all duration-300"
+        className="cursor-pointer h-full w-full flex flex-col px-4 justify-center gap-y-2 bg-zinc-300 dark:bg-zinc-700 hover:backdrop-blur-md hover:bg-opacity-30 transition-all duration-300"
         style={{ borderRadius: "8px" }} // Adjust the border-radius as needed
       >
         <div className="hidden md:flex flex-col h-[200px] w-full gap-y-1 pt-2">

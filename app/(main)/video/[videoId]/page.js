@@ -19,6 +19,7 @@ export default function Video() {
   const { videoId } = params;
   const [loading, setLoading] = useState(false);
   const [video, setVideo] = useState({});
+  const [relatedVideos, setRelatedVideos] = useState([]);
 
   const { data: session } = useSession();
 
@@ -48,6 +49,8 @@ export default function Video() {
       }
       // console.log(res.data.data);
       setVideo(res.data.data);
+      const res2 = await axios.get(`/api/videos/${res.data.data.category}`);
+      setRelatedVideos(res2.data.data);
       if (res.data.data?.likes.includes(session.user.id)) setLiked(true);
       if (res.data.data?.dislikes.includes(session.user.id)) setDisliked(true);
       if (res.data.data?.userId?.subscribers.includes(session.user.id))
@@ -195,17 +198,10 @@ export default function Video() {
       </div>
       <Separator className="bg-zinc-500 dark:bg-zinc-400" />
       <div className=" mt-4 w-full flex justify-center flex-wrap">
-        <VideoCard className="w-[300px] m-3" video={video} />
-        <VideoCard className="w-[300px] m-3" video={video} />
-        <VideoCard className="w-[300px] m-3" video={video} />
-        <VideoCard className="w-[300px] m-3" video={video} />
-        <VideoCard className="w-[300px] m-3" video={video} />
-        <VideoCard className="w-[300px] m-3" video={video} />
-        <VideoCard className="w-[300px] m-3" video={video} />
-        <VideoCard className="w-[300px] m-3" video={video} />
-        <VideoCard className="w-[300px] m-3" video={video} />
-        <VideoCard className="w-[300px] m-3" video={video} />
-        <VideoCard className="w-[300px] m-3" video={video} />
+        {relatedVideos?.map((r) => {
+          if (r._id !== videoId)
+            return <VideoCard className="w-[300px] m-3" video={r} />;
+        })}
       </div>
     </div>
   );
