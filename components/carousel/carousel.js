@@ -41,8 +41,6 @@ export default function VideoCarousel() {
     return result;
   }, []);
 
-  console.log(pairs);
-
   return (
     <div className="h-[350px] mb-4">
       <Carousel

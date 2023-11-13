@@ -72,7 +72,11 @@ export default function Video() {
         undisliked,
       });
       // console.log("UPDATED:", res.data.data);
-      setVideo({ ...video, likes: res.data.data.likes });
+      setVideo({
+        ...video,
+        likes: res.data.data.likes,
+        dislikes: res.data.data.dislikes,
+      });
     } catch (err) {
       console.log(err);
     }
@@ -200,7 +204,9 @@ export default function Video() {
       <div className=" mt-4 w-full flex justify-center flex-wrap">
         {relatedVideos?.map((r) => {
           if (r._id !== videoId)
-            return <VideoCard className="w-[300px] m-3" video={r} />;
+            return (
+              <VideoCard key={r._id} className="w-[300px] m-3" video={r} />
+            );
         })}
       </div>
     </div>

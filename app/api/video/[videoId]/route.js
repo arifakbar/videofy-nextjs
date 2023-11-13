@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import Video from "@/models/video";
 import User from "@/models/user";
+import Comment from "@/models/comment";
 import { getServerSession } from "next-auth";
 
 export async function GET(req, { params }) {
@@ -11,7 +12,7 @@ export async function GET(req, { params }) {
     const { videoId } = params;
     const getVideo = await Video.findById(videoId)
       .populate("userId", "name profilePic subscribers watchLater")
-      .populate("comments")
+      .populate({ path: "comments", populate: "userId" })
       .exec();
     if (!getVideo)
       return NextResponse.json({ error: "Video Not found", status: 404 });
@@ -50,6 +51,7 @@ export async function PATCH(req, { params }) {
     );
     const video = await Video.findById(videoId)
       .populate("userId", "name profilePic subscribers watchLater")
+      .populate({ path: "comments", populate: "userId" })
       .exec();
     if (video.views?.includes(userId)) {
       return NextResponse.json({ data: video, status: 201 });
@@ -64,6 +66,7 @@ export async function PATCH(req, { params }) {
       { new: true }
     )
       .populate("userId", "name profilePic subscribers watchLater")
+      .populate({ path: "comments", populate: "userId" })
       .exec();
     return NextResponse.json({ data: updatedVideo, status: 201 });
   } catch (err) {
