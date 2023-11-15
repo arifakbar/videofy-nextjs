@@ -38,7 +38,7 @@ export default function Comments({ videoId, initialComments }) {
   useEffect(() => {
     const socketServerUrl =
       process.env.NODE_ENV === "production"
-        ? "https://your-production-domain.com"
+        ? process.env.NEXT_PUBLIC_SITE_URL
         : "http://localhost:3001";
 
     const newSocket = io(socketServerUrl);
