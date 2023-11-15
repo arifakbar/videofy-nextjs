@@ -1,15 +1,39 @@
 "use client";
 
 import { Carousel } from "flowbite-react";
+import { PlayCircle } from "lucide-react";
+import ActionTooltip from "../ui/action-tooltip";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 // https://picsum.photos/200/300?random=3
 
 export default function MobileCarousel() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [videos, setVideos] = useState([]);
 
-  const onPlayClick = () => {
-    router.push(`/video/1`);
+  useEffect(() => {
+    loadVideos();
+  }, []);
+
+  const loadVideos = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get("/api/videos/random");
+      setVideos(res.data.data);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  console.log("Mobile: ", videos);
+
+  const onPlayClick = (id) => {
+    router.push(`/video/${id}`);
   };
 
   return (
@@ -20,30 +44,16 @@ export default function MobileCarousel() {
         indicators={false}
         className="rounded-0"
       >
-        <img
-          alt="NF"
-          src="https://picsum.photos/200/300?random=1"
-          className="object-center rounded"
-          onClick={onPlayClick}
-        />
-        <img
-          alt="NF"
-          src="https://picsum.photos/200/300?random=6"
-          className="object-center"
-          onClick={onPlayClick}
-        />
-        <img
-          alt="NF"
-          src="https://picsum.photos/200/300?random=3"
-          className="object-center"
-          onClick={onPlayClick}
-        />
-        <img
-          alt="NF"
-          src="https://picsum.photos/200/300?random=4"
-          className="object-center"
-          onClick={onPlayClick}
-        />
+        {videos?.map((v) => {
+          return (
+            <img
+              alt="NF"
+              src={v?.thumbnail}
+              className="object-center rounded"
+              onClick={() => onPlayClick(v?._id)}
+            />
+          );
+        })}
       </Carousel>
     </div>
   );
