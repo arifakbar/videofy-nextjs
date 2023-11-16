@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "socket": "nodemon socket.js"
+    "socket": "nodemon socket.js",
+    "pm2": "pm2 start npm -- start && pm2 start socket.js --name my-socket-server"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
