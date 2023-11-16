@@ -5,10 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start && node socket.js",
     "lint": "next lint",
-    "socket": "nodemon socket.js",
-    "pm2": "pm2 start npm -- start && pm2 start socket.js --name my-socket-server"
+    "socket": "nodemon socket.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
