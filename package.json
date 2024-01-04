@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev && nodemon socket.js",
     "build": "next build",
     "start": "next start && node socket.js",
     "lint": "next lint",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
+    "@livekit/components-react": "^1.5.1",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -31,6 +32,8 @@
     "firebase": "^10.4.0",
     "flowbite": "^1.8.1",
     "flowbite-react": "^0.6.4",
+    "livekit-client": "^1.15.6",
+    "livekit-server-sdk": "^1.2.7",
     "lucide-react": "^0.279.0",
     "mongoose": "^7.5.3",
     "next": "latest",

@@ -6,7 +6,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://videofy-nextjs-production.up.railway.app",
+    origin: "http://localhost:3000",
   },
 });
 
@@ -20,6 +20,26 @@ io.on("connection", (socket) => {
 
   socket.on("deleteComment", (deletedCommentId) => {
     io.emit("deleteComment", deletedCommentId);
+  });
+
+  socket.on("liked", (userId) => {
+    console.log("Recieved new like from: ", userId);
+    io.emit("liked", userId);
+  });
+
+  socket.on("unliked", (userId) => {
+    console.log("Removed like from: ", userId);
+    io.emit("unliked", userId);
+  });
+
+  socket.on("disliked", (userId) => {
+    console.log("Recieved new dislike from: ", userId);
+    io.emit("disliked", userId);
+  });
+
+  socket.on("undisliked", (userId) => {
+    console.log("Removed dislike from: ", userId);
+    io.emit("undisliked", userId);
   });
 
   socket.on("disconnect", () => {

@@ -13,6 +13,7 @@ import axios from "axios";
 import SpinLoading from "@/components/spinLoading";
 import { useSession } from "next-auth/react";
 import ActionTooltip from "@/components/ui/action-tooltip";
+import { io } from "socket.io-client";
 
 export default function Video() {
   const params = useParams();
@@ -32,9 +33,71 @@ export default function Video() {
 
   const [subscribed, setSubscribed] = useState(false);
 
+  const [totalLikes, setTotalLikes] = useState([]);
+  const [totalDislikes, setTotalDislikes] = useState([]);
+
   useEffect(() => {
     loadVideo();
   }, [videoId, session?.user?.id]);
+
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const socketServerUrl =
+      process.env.NODE_ENV === "production"
+        ? process.env.NEXT_PUBLIC_SITE_URL
+        : "http://localhost:3001";
+
+    // console.log("socketServerUrl: ", socketServerUrl);
+
+    const newSocket = io(socketServerUrl);
+    setSocket(newSocket);
+
+    newSocket.on("connect", () => {
+      console.log("Connected to like server");
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    // Listen for new likes
+    if (socket) {
+      socket.on("liked", (newUserId) => {
+        setTotalLikes((prevUserIds) => [...prevUserIds, newUserId]);
+        setTotalDislikes((prevUserIds) =>
+          prevUserIds.filter((userId) => userId !== newUserId)
+        );
+      });
+    }
+
+    if (socket) {
+      socket.on("unliked", (removedUserId) => {
+        setTotalLikes((prevUserIds) =>
+          prevUserIds.filter((userId) => userId !== removedUserId)
+        );
+      });
+    }
+
+    if (socket) {
+      socket.on("disliked", (newUserId) => {
+        setTotalDislikes((prevUserIds) => [...prevUserIds, newUserId]);
+        setTotalLikes((prevUserIds) =>
+          prevUserIds.filter((userId) => userId !== newUserId)
+        );
+      });
+    }
+
+    if (socket) {
+      socket.on("undisliked", (removedUserId) => {
+        setTotalDislikes((prevUserIds) =>
+          prevUserIds.filter((userId) => userId !== removedUserId)
+        );
+      });
+    }
+  }, [socket]);
 
   const loadVideo = async () => {
     try {
@@ -53,8 +116,10 @@ export default function Video() {
       setRelatedVideos(res2.data.data);
       if (res.data.data?.likes.includes(session.user.id)) setLiked(true);
       if (res.data.data?.dislikes.includes(session.user.id)) setDisliked(true);
-      if (res.data.data?.userId?.subscribers.includes(session.user.id))
-        setSubscribed(true);
+      if (res.data.data?.userId?.subscribers.includes(session.user.id));
+      setTotalDislikes(res.data.data.dislikes);
+      setTotalLikes(res.data.data.likes);
+      setSubscribed(true);
       // console.log("RES: ", res.data.data);
       setLoading(false);
     } catch (err) {
@@ -71,12 +136,14 @@ export default function Video() {
         disliked,
         undisliked,
       });
+      // setTotalDislikes(res.data.data.dislikes);
+      // setTotalLikes(res.data.data.likes);
       // console.log("UPDATED:", res.data.data);
-      setVideo({
-        ...video,
-        likes: res.data.data.likes,
-        dislikes: res.data.data.dislikes,
-      });
+      // setVideo({
+      //   ...video,
+      //   likes: res.data.data.likes,
+      //   dislikes: res.data.data.dislikes,
+      // });
     } catch (err) {
       console.log(err);
     }
@@ -90,12 +157,18 @@ export default function Video() {
         setDisliked(false);
         setUnliked(false);
         setDisliked(false);
+        if (socket) {
+          socket.emit("liked", session?.user?.id);
+        }
         updatedVideo(true, false, false, false);
       } else {
         setUnliked(true);
         setLiked(false);
         setDisliked(false);
         setUndisliked(false);
+        if (socket) {
+          socket.emit("unliked", session?.user?.id);
+        }
         updatedVideo(false, true, false, false);
       }
     } else {
@@ -104,12 +177,18 @@ export default function Video() {
         setLiked(false);
         setUndisliked(false);
         setUnliked(false);
+        if (socket) {
+          socket.emit("disliked", session?.user?.id);
+        }
         updatedVideo(false, false, true, false);
       } else {
         setUndisliked(true);
         setDisliked(false);
         setLiked(false);
         setUnliked(false);
+        if (socket) {
+          socket.emit("undisliked", session?.user?.id);
+        }
         updatedVideo(false, false, false, true);
       }
     }
@@ -163,7 +242,8 @@ export default function Video() {
                   className="text-sm font-semibold 
                 text-zinc-500 dark:text-zinc-400"
                 >
-                  {video?.likes?.length}
+                  {/* {video?.likes?.length} */}
+                  {totalLikes?.length}
                 </p>
               </div>
               <div className="flex gap-x-2 items-center">
@@ -179,7 +259,8 @@ export default function Video() {
                   className="text-sm font-semibold 
                 text-zinc-500 dark:text-zinc-400"
                 >
-                  {video?.dislikes?.length}
+                  {/* {video?.dislikes?.length} */}
+                  {totalDislikes?.length}
                 </p>
               </div>
             </div>

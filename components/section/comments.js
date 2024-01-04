@@ -41,6 +41,8 @@ export default function Comments({ videoId, initialComments }) {
         ? process.env.NEXT_PUBLIC_SITE_URL
         : "http://localhost:3001";
 
+    // console.log("socketServerUrl: ", socketServerUrl);
+
     const newSocket = io(socketServerUrl);
     setSocket(newSocket);
 
@@ -57,6 +59,7 @@ export default function Comments({ videoId, initialComments }) {
     // Listen for new comments
     if (socket) {
       socket.on("comment", (newComment) => {
+        // console.log("COMMENTED...");
         setComments((prevComments) => [...prevComments, newComment]);
       });
     }
